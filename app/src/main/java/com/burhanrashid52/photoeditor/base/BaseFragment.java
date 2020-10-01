@@ -14,7 +14,7 @@ import android.view.ViewGroup;
  * @since 5/25/2018
  */
 public abstract class BaseFragment extends Fragment {
-
+    private FragmentCallBack fragmentCallBack;
     protected abstract int getLayoutId();
 
     @Nullable
@@ -24,5 +24,19 @@ public abstract class BaseFragment extends Fragment {
             throw new IllegalArgumentException("Invalid layout id");
         }
         return inflater.inflate(getLayoutId(), container, false);
+    }
+    public BaseFragment(FragmentCallBack fragmentCallBack) {
+        this.fragmentCallBack = fragmentCallBack;
+    }
+
+    public FragmentCallBack getFragmentCallBack() {
+        return fragmentCallBack;
+    }
+
+    public void setFragmentCallBack(FragmentCallBack fragmentCallBack) {
+        this.fragmentCallBack = fragmentCallBack;
+    }
+    public interface FragmentCallBack {
+        void setVisibilityLoading(int i);
     }
 }

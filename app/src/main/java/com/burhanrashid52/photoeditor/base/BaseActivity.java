@@ -16,7 +16,7 @@ import android.widget.Toast;
  * Created by Burhanuddin Rashid on 1/17/2018.
  */
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements MvpView{
 
     public static final int READ_WRITE_STORAGE = 52;
     private ProgressDialog mProgressDialog;
@@ -72,5 +72,15 @@ public class BaseActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void showMessage(String message) {
+
+    }
+
+    @Override
+    public boolean isNetworkConnected() {
+        return false;
     }
 }

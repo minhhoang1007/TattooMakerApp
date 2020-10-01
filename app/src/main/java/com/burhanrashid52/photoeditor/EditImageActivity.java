@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -27,16 +26,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.ChangeBounds;
 import androidx.transition.TransitionManager;
-
 import com.burhanrashid52.photoeditor.base.BaseActivity;
+import com.burhanrashid52.photoeditor.common.Common;
 import com.burhanrashid52.photoeditor.filters.FilterListener;
 import com.burhanrashid52.photoeditor.filters.FilterViewAdapter;
 import com.burhanrashid52.photoeditor.tools.EditingToolsAdapter;
 import com.burhanrashid52.photoeditor.tools.ToolType;
-
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 import ja.burhanrashid52.photoeditor.PhotoEditorView;
@@ -68,12 +66,9 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
     private ConstraintLayout mRootView;
     private ConstraintSet mConstraintSet = new ConstraintSet();
     private boolean mIsFilterVisible;
-
     @Nullable
     @VisibleForTesting
     Uri mSaveImageUri;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,22 +107,23 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
                 .build(); // build photo editor sdk
 
         mPhotoEditor.setOnPhotoEditorListener(this);
-
         //Set Image Dynamically
         // mPhotoEditorView.getSource().setImageResource(R.drawable.color_palette);
     }
 
     private void handleIntentImage(ImageView source) {
         Intent intent = getIntent();
-        if (intent != null) {
-            String intentType = intent.getType();
-            if (intentType != null && intentType.startsWith("image/")) {
-                Uri imageUri = intent.getData();
-                if (imageUri != null) {
-                    source.setImageURI(imageUri);
-                }
-            }
-        }
+        int intValue = intent.getIntExtra("desgin", 0);
+        source.setImageResource(intValue);
+//        if (intent != null) {
+//            String intentType = intent.getType();
+//            if (intentType != null && intentType.startsWith("image/")) {
+//                Uri imageUri = intent.getData();
+//                if (imageUri != null) {
+//                    source.setImageURI(imageUri);
+//                }
+//            }
+//        }
     }
 
     private void initViews() {
@@ -242,15 +238,36 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
     }
 
     private void shareImage() {
-        if (mSaveImageUri == null) {
-            showSnackbar(getString(R.string.msg_save_image_to_share));
-            return;
-        }
-
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_STREAM, buildFileProviderUri(mSaveImageUri));
-        startActivity(Intent.createChooser(intent, getString(R.string.msg_share_image)));
+        String[] listColors = new String[]{"White", "Black", "Red"};
+        Integer[] listCo = new Integer[]{R.color.white, R.color.black, R.color.red_color_picker};
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(EditImageActivity.this);
+        mBuilder.setTitle("Choose an color");
+        mBuilder.setIcon(R.drawable.cate_1_15);
+        mBuilder.setSingleChoiceItems(listColors, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                    // mRootView.setBackgroundColor(listCo[i]);
+                mPhotoEditorView.setBackgroundColor(listCo[i]);
+                     dialogInterface.dismiss();
+            }
+        });
+        mBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        AlertDialog mDialog = mBuilder.create();
+        mDialog.show();
+//        if (mSaveImageUri == null) {
+//            showSnackbar(getString(R.string.msg_save_image_to_share));
+//            return;
+//        }
+//
+//        Intent intent = new Intent(Intent.ACTION_SEND);
+//        intent.setType("image/*");
+//        intent.putExtra(Intent.EXTRA_STREAM, buildFileProviderUri(mSaveImageUri));
+//        startActivity(Intent.createChooser(intent, getString(R.string.msg_share_image)));
     }
 
     private Uri buildFileProviderUri(@NonNull Uri uri) {
@@ -258,17 +275,19 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
                 FILE_PROVIDER_AUTHORITY,
                 new File(uri.getPath()));
     }
-
     @SuppressLint("MissingPermission")
     private void saveImage() {
         if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             showLoading("Saving...");
-            File file = new File(Environment.getExternalStorageDirectory()
-                    + File.separator + ""
-                    + System.currentTimeMillis() + ".png");
+//            File file = new File(Environment.getExternalStorageDirectory()
+//                    + File.separator + ""
+//                    + System.currentTimeMillis() + ".png");
+            File myDir = new File(Common.folderPath);
+            myDir.mkdirs();
+            String fname = "Image-" + System.currentTimeMillis() + ".png";
+            File file = new File(myDir, fname);
             try {
                 file.createNewFile();
-
                 SaveSettings saveSettings = new SaveSettings.Builder()
                         .setClearViewsEnabled(true)
                         .setTransparencyEnabled(true)
