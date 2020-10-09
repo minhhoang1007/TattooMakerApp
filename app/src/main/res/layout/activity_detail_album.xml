@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/revIdea"
-    tools:context=".ui.album.DetailAlbumActivity">
+    android:background="@color/black"
+    tools:context=".ui.detail.DetailAlbumActivity">
     <ImageView
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"

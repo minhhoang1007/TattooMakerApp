@@ -6,7 +6,6 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -28,7 +27,6 @@ import android.widget.RelativeLayout;
  */
 
 public class PhotoEditorView extends RelativeLayout {
-
     private static final String TAG = "PhotoEditorView";
 
     private FilterImageView mImgSource;
@@ -71,6 +69,7 @@ public class PhotoEditorView extends RelativeLayout {
             Drawable imgSrcDrawable = a.getDrawable(R.styleable.PhotoEditorView_photo_src);
             if (imgSrcDrawable != null) {
                 mImgSource.setImageDrawable(imgSrcDrawable);
+                mImgSource.setScaleType(ImageView.ScaleType.FIT_XY);
             }
         }
 

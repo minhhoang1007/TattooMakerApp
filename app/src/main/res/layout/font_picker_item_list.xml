@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="40dp"
+    android:background="@android:color/white"
+    android:layout_height="50dp">
+
+    <TextView
+        android:id="@+id/font_picker_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Font"
+        android:layout_centerInParent="true"
+        android:textColor="@color/black"
+
+        />
+    <VideoView
+        android:layout_alignParentEnd="true"
+        android:background="@color/revIdea"
+        android:layout_width="1dp"
+        android:layout_height="50dp"/>
+</RelativeLayout>

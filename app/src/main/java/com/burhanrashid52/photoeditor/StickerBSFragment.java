@@ -17,13 +17,14 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 public class StickerBSFragment extends BottomSheetDialogFragment {
-
+    private String TAG = "StickerBSFragment";
     public StickerBSFragment() {
         // Required empty public constructor
     }
@@ -83,7 +84,7 @@ public class StickerBSFragment extends BottomSheetDialogFragment {
 
     public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHolder> {
 
-        int[] stickerList = new int[]{R.drawable.aa, R.drawable.bb, R.drawable.cate_1_0, R.drawable.cate_1_1,
+        int[] stickerList = new int[]{R.drawable.mixigaming,R.drawable.aa, R.drawable.bb, R.drawable.cate_1_0, R.drawable.cate_1_1,
                 R.drawable.cate_1_2, R.drawable.cate_1_3, R.drawable.cate_1_4,
                 R.drawable.cate_1_5, R.drawable.cate_1_6, R.drawable.cate_1_7, R.drawable.cate_1_8, R.drawable.cate_1_9,
                 R.drawable.cate_1_10, R.drawable.cate_1_11, R.drawable.cate_1_12, R.drawable.cate_1_13, R.drawable.cate_1_14,
@@ -139,6 +140,7 @@ public class StickerBSFragment extends BottomSheetDialogFragment {
                     @Override
                     public void onClick(View v) {
                         if (mStickerListener != null) {
+                            Log.e(TAG, "onClick: sticker 1" );
                             mStickerListener.onStickerClick(
                                     BitmapFactory.decodeResource(getResources(),
                                             stickerList[getLayoutPosition()]));

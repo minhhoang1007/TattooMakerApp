@@ -2,6 +2,7 @@ package ja.burhanrashid52.photoeditor;
 
 import android.graphics.Rect;
 import androidx.annotation.Nullable;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,18 +17,17 @@ import android.widget.RelativeLayout;
  * <p></p>
  */
 class MultiTouchListener implements OnTouchListener {
-
+    private String TAG = "MultiTouchListener";
     private static final int INVALID_POINTER_ID = -1;
     private final GestureDetector mGestureListener;
     private boolean isRotateEnabled = true;
     private boolean isTranslateEnabled = true;
     private boolean isScaleEnabled = true;
-    private float minimumScale = 0.5f;
+    private float minimumScale = 0.2f;
     private float maximumScale = 10.0f;
     private int mActivePointerId = INVALID_POINTER_ID;
     private float mPrevX, mPrevY, mPrevRawX, mPrevRawY;
     private ScaleGestureDetector mScaleGestureDetector;
-
     private int[] location = new int[2];
     private Rect outRect;
     private View deleteView;
@@ -134,6 +134,7 @@ class MultiTouchListener implements OnTouchListener {
                 }
                 view.bringToFront();
                 firePhotoEditorSDKListener(view, true);
+                Log.e(TAG, "onTouch: 1" );
                 break;
             case MotionEvent.ACTION_MOVE:
                 int pointerIndexMove = event.findPointerIndex(mActivePointerId);
@@ -144,9 +145,11 @@ class MultiTouchListener implements OnTouchListener {
                         adjustTranslation(view, currX - mPrevX, currY - mPrevY);
                     }
                 }
+                Log.e(TAG, "onTouch: 2" );
                 break;
             case MotionEvent.ACTION_CANCEL:
                 mActivePointerId = INVALID_POINTER_ID;
+                Log.e(TAG, "onTouch: 3" );
                 break;
             case MotionEvent.ACTION_UP:
                 mActivePointerId = INVALID_POINTER_ID;
@@ -160,6 +163,7 @@ class MultiTouchListener implements OnTouchListener {
                     deleteView.setVisibility(View.GONE);
                 }
                 firePhotoEditorSDKListener(view, false);
+                Log.e(TAG, "onTouch: 4" );
                 break;
             case MotionEvent.ACTION_POINTER_UP:
                 int pointerIndexPointerUp = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
@@ -170,6 +174,7 @@ class MultiTouchListener implements OnTouchListener {
                     mPrevY = event.getY(newPointerIndex);
                     mActivePointerId = event.getPointerId(newPointerIndex);
                 }
+                Log.e(TAG, "onTouch: 5" );
                 break;
         }
         return true;

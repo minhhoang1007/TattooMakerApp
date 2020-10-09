@@ -8,11 +8,13 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -33,7 +35,6 @@ import com.burhanrashid52.photoeditor.filters.FilterViewAdapter;
 import com.burhanrashid52.photoeditor.tools.EditingToolsAdapter;
 import com.burhanrashid52.photoeditor.tools.ToolType;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
@@ -66,6 +67,10 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
     private ConstraintLayout mRootView;
     private ConstraintSet mConstraintSet = new ConstraintSet();
     private boolean mIsFilterVisible;
+    ImageView btnPlus, btnMinus;
+    int offset = 0, duration = 100;
+    float scaleX = 1.0f, scaleY = 1.0f;
+    float maxZoomLimit = 2.5f, minZoomLimit = 1.0f;
     @Nullable
     @VisibleForTesting
     Uri mSaveImageUri;
@@ -161,19 +166,77 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
 
         imgShare = findViewById(R.id.imgShare);
         imgShare.setOnClickListener(this);
-
+        btnPlus = findViewById(R.id.btnPlus);
+        btnMinus = findViewById(R.id.btnMinus);
+        btnPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                zoomIn(mPhotoEditorView);
+            }
+        });
+        btnMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                zoomOut(mPhotoEditorView);
+            }
+        });
+    }
+    private void zoomIn(View v) {
+//        if (scaleX < maxZoomLimit && scaleY < maxZoomLimit) {
+//            Animation animation = new ScaleAnimation(scaleX, (scaleX + 0.2f), scaleY, (scaleY + 0.2f), 50, 50);
+//            scaleX += 0.2f;
+//            scaleY += 0.2f;
+//            animation.setInterpolator(new DecelerateInterpolator());
+//            animation.setDuration(duration);
+//            animation.setStartOffset(offset);
+//            animation.setFillAfter(true);
+//            v.startAnimation(animation);
+//        }
+        float x = v.getScaleX();
+        float y = v.getScaleY();
+        if(x < 1.5f && y < 1.5f){
+            v.setScaleX((float) (x+0.1f));
+            v.setScaleY((float) (y+0.1f));
+        }
+//        v.setScaleX((float) (x+ 0.2f));
+//        v.setScaleY((float) (y+ 0.2f));
     }
 
+    private void zoomOut(View v) {
+//        if (scaleX > minZoomLimit && scaleY > minZoomLimit) {
+////            float x = v.getScaleX();
+////            float y = v.getScaleY();
+//            Animation animation = new ScaleAnimation(scaleX, (scaleX - 0.2f), scaleY, (scaleY - 0.2f), 50, 50);
+//            scaleY -= 0.2f;
+//            scaleX -= 0.2f;
+//            animation.setInterpolator(new DecelerateInterpolator());
+//            animation.setDuration(duration);
+//            animation.setStartOffset(offset);
+//            animation.setFillAfter(true);
+//            v.startAnimation(animation);
+//        }
+        float x = v.getScaleX();
+        float y = v.getScaleY();
+        if(x == 1 && y == 1){
+            v.setScaleX(x);
+            v.setScaleY(y);
+        }else{
+            v.setScaleX((float) (x-0.1f));
+            v.setScaleY((float) (y-0.1f));
+        }
+
+    }
     @Override
     public void onEditTextChangeListener(final View rootView, String text, int colorCode) {
         TextEditorDialogFragment textEditorDialogFragment =
                 TextEditorDialogFragment.show(this, text, colorCode);
         textEditorDialogFragment.setOnTextEditorListener(new TextEditorDialogFragment.TextEditor() {
             @Override
-            public void onDone(String inputText, int colorCode) {
+            public void onDone(String inputText, int colorCode, String fontCode) {
                 final TextStyleBuilder styleBuilder = new TextStyleBuilder();
                 styleBuilder.withTextColor(colorCode);
-
+                Typeface tf = Typeface.createFromAsset(getApplication().getAssets(), fontCode);
+                styleBuilder.withTextFont(tf);
                 mPhotoEditor.editText(rootView, inputText, styleBuilder);
                 mTxtCurrentTool.setText(R.string.label_text);
             }
@@ -420,10 +483,11 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
                 TextEditorDialogFragment textEditorDialogFragment = TextEditorDialogFragment.show(this);
                 textEditorDialogFragment.setOnTextEditorListener(new TextEditorDialogFragment.TextEditor() {
                     @Override
-                    public void onDone(String inputText, int colorCode) {
+                    public void onDone(String inputText, int colorCode, String fontCode) {
                         final TextStyleBuilder styleBuilder = new TextStyleBuilder();
                         styleBuilder.withTextColor(colorCode);
-
+                        Typeface tf = Typeface.createFromAsset(getApplication().getAssets(), fontCode);
+                        styleBuilder.withTextFont(tf);
                         mPhotoEditor.addText(inputText, styleBuilder);
                         mTxtCurrentTool.setText(R.string.label_text);
                     }

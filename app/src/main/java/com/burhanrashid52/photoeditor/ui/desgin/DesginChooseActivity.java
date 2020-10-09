@@ -1,4 +1,4 @@
-package com.burhanrashid52.photoeditor.ui.main;
+package com.burhanrashid52.photoeditor.ui.desgin;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.burhanrashid52.photoeditor.EditImageActivity;
 import com.burhanrashid52.photoeditor.R;
-import com.burhanrashid52.photoeditor.ui.idea.DetailIdeaActivity;
-import com.burhanrashid52.photoeditor.ui.idea.IdeaAdapter;
 
 import java.util.ArrayList;
 
@@ -180,6 +178,7 @@ public class DesginChooseActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), EditImageActivity.class);
                 intent.putExtra("desgin", imgChooseDes.get(position).getImgDes());
                 startActivity(intent);
+                finish();
             }
         });
     }

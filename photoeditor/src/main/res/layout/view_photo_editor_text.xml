@@ -30,5 +30,11 @@
         android:layout_gravity="top|start"
         android:elevation="1dp"
         android:src="@drawable/ic_remove" />
-
+    <ImageView
+        android:id="@+id/imgPhotoEditorResize"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="top|end"
+        android:elevation="1dp"
+        android:src="@drawable/resize" />
 </FrameLayout>

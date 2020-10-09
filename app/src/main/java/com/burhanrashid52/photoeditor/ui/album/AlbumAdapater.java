@@ -30,6 +30,10 @@ public class AlbumAdapater extends RecyclerView.Adapter {
     public void setOnClickLisener(OnClickLisener onClickLisener) {
         this.onClickLisener = onClickLisener;
     }
+    public void setVideoList(List<File> listImg) {
+        this.listImg = listImg;
+        this.notifyDataSetChanged();
+    }
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

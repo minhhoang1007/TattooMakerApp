@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 
 public class EmojiBSFragment extends BottomSheetDialogFragment {
-
+    private String TAG = "EmojiBSFragment";
     public EmojiBSFragment() {
         // Required empty public constructor
     }

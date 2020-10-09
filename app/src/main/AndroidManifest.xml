@@ -18,10 +18,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.album.DetailAlbumActivity" ></activity>
+        <activity android:name=".ui.detail.DetailAlbumActivity" ></activity>
         <activity android:name=".ui.album.AlbumActivity" />
-        <activity android:name=".ui.main.DesginChooseActivity" />
-        <activity android:name=".ui.idea.DetailIdeaActivity" />
+        <activity android:name=".ui.desgin.DesginChooseActivity" />
+        <activity android:name=".ui.detail.DetailIdeaActivity" />
         <activity android:name=".ui.idea.IdeaActivity" />
         <activity android:name=".ui.main.MainActivity">
             <intent-filter>

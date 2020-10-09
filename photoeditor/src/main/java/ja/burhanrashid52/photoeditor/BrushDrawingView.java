@@ -14,6 +14,7 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,7 +31,7 @@ import java.util.Stack;
  * @since 12/1/18
  */
 public class BrushDrawingView extends View {
-
+    private String TAG = "BrushDrawingView";
     static final float DEFAULT_BRUSH_SIZE = 25.0f;
     static final float DEFAULT_ERASER_SIZE = 50.0f;
     static final int DEFAULT_OPACITY = 255;
@@ -238,6 +239,7 @@ public class BrushDrawingView extends View {
         mTouchX = x;
         mTouchY = y;
         if (mBrushViewChangeListener != null) {
+            Log.e(TAG, "touchStart: " + mTouchX );
             mBrushViewChangeListener.onStartDrawing();
         }
     }

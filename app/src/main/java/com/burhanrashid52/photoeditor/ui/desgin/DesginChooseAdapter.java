@@ -1,4 +1,4 @@
-package com.burhanrashid52.photoeditor.ui.main;
+package com.burhanrashid52.photoeditor.ui.desgin;
 
 import android.content.Context;
 import android.util.Log;
@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.burhanrashid52.photoeditor.R;
-import com.burhanrashid52.photoeditor.ui.idea.IdeaAdapter;
 
 import java.util.ArrayList;
 

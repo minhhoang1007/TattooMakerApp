@@ -81,7 +81,7 @@ public class PhotoEditor implements BrushViewChangeListener {
         final ImageView imageView = imageRootView.findViewById(R.id.imgPhotoEditorImage);
         final FrameLayout frmBorder = imageRootView.findViewById(R.id.frmBorder);
         final ImageView imgClose = imageRootView.findViewById(R.id.imgPhotoEditorClose);
-
+        final ImageView imgResize = imageRootView.findViewById(R.id.imgPhotoEditorResize);
         imageView.setImageBitmap(desiredImage);
 
         MultiTouchListener multiTouchListener = getMultiTouchListener();
@@ -151,6 +151,7 @@ public class PhotoEditor implements BrushViewChangeListener {
         final View textRootView = getLayout(ViewType.TEXT);
         final TextView textInputTv = textRootView.findViewById(R.id.tvPhotoEditorText);
         final ImageView imgClose = textRootView.findViewById(R.id.imgPhotoEditorClose);
+        final ImageView imgResize = textRootView.findViewById(R.id.imgPhotoEditorResize);
         final FrameLayout frmBorder = textRootView.findViewById(R.id.frmBorder);
 
         textInputTv.setText(text);
@@ -253,7 +254,7 @@ public class PhotoEditor implements BrushViewChangeListener {
         final TextView emojiTextView = emojiRootView.findViewById(R.id.tvPhotoEditorText);
         final FrameLayout frmBorder = emojiRootView.findViewById(R.id.frmBorder);
         final ImageView imgClose = emojiRootView.findViewById(R.id.imgPhotoEditorClose);
-
+        final ImageView imgResize = emojiRootView.findViewById(R.id.imgPhotoEditorResize);
         if (emojiTypeface != null) {
             emojiTextView.setTypeface(emojiTypeface);
         }
@@ -352,6 +353,7 @@ public class PhotoEditor implements BrushViewChangeListener {
             //when we remove the view from stack i.e onRemoveViewListener(ViewType viewType, int numberOfAddedViews);
             rootView.setTag(viewType);
             final ImageView imgClose = rootView.findViewById(R.id.imgPhotoEditorClose);
+            final ImageView imgResize = rootView.findViewById(R.id.imgPhotoEditorResize);
             final View finalRootView = rootView;
             if (imgClose != null) {
                 imgClose.setOnClickListener(new View.OnClickListener() {
@@ -574,8 +576,10 @@ public class PhotoEditor implements BrushViewChangeListener {
                 frmBorder.setBackgroundResource(0);
             }
             ImageView imgClose = childAt.findViewById(R.id.imgPhotoEditorClose);
+            ImageView imgReSize = childAt.findViewById(R.id.imgPhotoEditorResize);
             if (imgClose != null) {
                 imgClose.setVisibility(View.GONE);
+                imgReSize.setVisibility(View.GONE);
             }
         }
     }

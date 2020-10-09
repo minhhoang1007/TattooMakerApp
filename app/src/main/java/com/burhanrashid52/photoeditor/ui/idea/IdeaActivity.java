@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.burhanrashid52.photoeditor.R;
+import com.burhanrashid52.photoeditor.ui.detail.DetailIdeaActivity;
 
 import java.util.ArrayList;
 

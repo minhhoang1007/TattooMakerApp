@@ -2,6 +2,7 @@ package com.burhanrashid52.photoeditor;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import androidx.annotation.ColorInt;
@@ -20,23 +21,22 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-/**
- * Created by Burhanuddin Rashid on 1/16/2018.
- */
-
 public class TextEditorDialogFragment extends DialogFragment {
-
     public static final String TAG = TextEditorDialogFragment.class.getSimpleName();
     public static final String EXTRA_INPUT_TEXT = "extra_input_text";
     public static final String EXTRA_COLOR_CODE = "extra_color_code";
+    public static final String EXTRA_FONT_CODE = "extra_font_code";
     private EditText mAddTextEditText;
+    private TextView mFontTextTextView;
+    private boolean isFontView = false;
     private TextView mAddTextDoneTextView;
     private InputMethodManager mInputMethodManager;
     private int mColorCode;
+    private String mFontCode;
     private TextEditor mTextEditor;
 
     public interface TextEditor {
-        void onDone(String inputText, int colorCode);
+        void onDone(String inputText, int colorCode, String fontCode);
     }
 
 
@@ -84,7 +84,36 @@ public class TextEditorDialogFragment extends DialogFragment {
         mAddTextEditText = view.findViewById(R.id.add_text_edit_text);
         mInputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         mAddTextDoneTextView = view.findViewById(R.id.add_text_done_tv);
-
+        mFontTextTextView = view.findViewById(R.id.font_text_done_tv);
+        //Setup the font picker for text color
+        RecyclerView addTextFontPickerRecyclerView = view.findViewById(R.id.add_text_font_picker_recycler_view);
+        LinearLayoutManager layoutManager1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        addTextFontPickerRecyclerView.setLayoutManager(layoutManager1);
+        addTextFontPickerRecyclerView.setHasFixedSize(true);
+        FontPickerAdapter fontPickerAdapter = new FontPickerAdapter(getActivity());
+        //This listener will change the text color when clicked on any color from picker
+        fontPickerAdapter.setOnFontPickerClickListener(new FontPickerAdapter.OnFontPickerClickListener() {
+            @Override
+            public void onFontPickerClickListener(String fontCode) {
+                mFontCode = fontCode;
+                Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), fontCode);
+                mAddTextEditText.setTypeface(tf);
+            }
+        });
+        addTextFontPickerRecyclerView.setAdapter(fontPickerAdapter);
+        addTextFontPickerRecyclerView.setVisibility(View.GONE);
+        mFontTextTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isFontView){
+                addTextFontPickerRecyclerView.setVisibility(View.GONE);
+                isFontView = false;
+                }else{
+                    addTextFontPickerRecyclerView.setVisibility(View.VISIBLE);
+                    isFontView = true;
+                }
+            }
+        });
         //Setup the color picker for text color
         RecyclerView addTextColorPickerRecyclerView = view.findViewById(R.id.add_text_color_picker_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -103,6 +132,8 @@ public class TextEditorDialogFragment extends DialogFragment {
         mAddTextEditText.setText(getArguments().getString(EXTRA_INPUT_TEXT));
         mColorCode = getArguments().getInt(EXTRA_COLOR_CODE);
         mAddTextEditText.setTextColor(mColorCode);
+//        Typeface tf1 = Typeface.createFromAsset(getActivity().getAssets(), mFontCode);
+//        mAddTextEditText.setTypeface(tf1);
         mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         //Make a callback on activity when user is done with text editing
@@ -112,15 +143,12 @@ public class TextEditorDialogFragment extends DialogFragment {
                 mInputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 dismiss();
                 String inputText = mAddTextEditText.getText().toString();
-                if (!TextUtils.isEmpty(inputText) && mTextEditor != null) {
-                    mTextEditor.onDone(inputText, mColorCode);
+                if (!TextUtils.isEmpty(inputText) && mTextEditor != null && mFontCode != null) {
+                    mTextEditor.onDone(inputText, mColorCode, mFontCode);
                 }
             }
         });
-
     }
-
-
     //Callback to listener if user is done with text editing
     public void setOnTextEditorListener(TextEditor textEditor) {
         mTextEditor = textEditor;

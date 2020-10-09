@@ -1,4 +1,4 @@
-package com.burhanrashid52.photoeditor.ui.idea;
+package com.burhanrashid52.photoeditor.ui.detail;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

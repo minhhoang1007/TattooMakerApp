@@ -3,28 +3,42 @@ package com.burhanrashid52.photoeditor.ui.main;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.burhanrashid52.photoeditor.BuildConfig;
 import com.burhanrashid52.photoeditor.R;
 import com.burhanrashid52.photoeditor.common.Common;
+import com.burhanrashid52.photoeditor.common.ImageList;
+import com.burhanrashid52.photoeditor.data.AppDataHelper;
+import com.burhanrashid52.photoeditor.data.IApiHelper;
+import com.burhanrashid52.photoeditor.data.IAppDataHelper;
 import com.burhanrashid52.photoeditor.ui.album.AlbumActivity;
+import com.burhanrashid52.photoeditor.ui.desgin.DesginChooseActivity;
 import com.burhanrashid52.photoeditor.ui.idea.IdeaActivity;
 import com.google.android.material.navigation.NavigationView;
+
 import java.io.File;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -46,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     TextView txtVersion, txtVersionnav;
+    IAppDataHelper appDataHelper = new AppDataHelper(this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +73,21 @@ public class MainActivity extends AppCompatActivity {
             requestStoragePermission();
         }
         onClickItemMenu();
+
+        appDataHelper.getData(new IApiHelper.CallBackDataNetWork<String>() {
+            @Override
+            public void onSuccess(List<ImageList> data) {
+                Log.e(TAG, "onSuccess: " + data.toString() );
+            }
+
+            @Override
+            public void onFail(String mess) {
+                Log.e(TAG, "onFail: " + mess.toString() );
+            }
+        });
+
     }
+
     private void onClickDrawer() {
         txtVersionnav = navView.findViewById(R.id.txtVersionNav);
         txtVersionnav.setText("Version " + BuildConfig.VERSION_NAME);
@@ -80,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (id == R.id.rate) {
                     //rateAuto();
                 } else if (id == R.id.about) {
-                    //showDialog();
+                    showDialog();
                 } else if (id == R.id.favorite) {
                     //Intent intentFav = new Intent(MainActivity.this, FavoriteActivity.class);
                     //startActivity(intentFav);
@@ -91,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     @OnClick({R.id.linDesgin, R.id.linIdea, R.id.linAlbum, R.id.linMore, R.id.btnMenu})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -109,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.linMore:
                 break;
             case R.id.btnMenu:
+                btnMenu.setColorFilter(Color.RED);
                 onClickDrawer();
                 break;
         }
@@ -148,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
         }
         Common.folderPath = file1.getAbsolutePath();
     }
+
     public void shareApp() {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
@@ -156,4 +189,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(Intent.createChooser(sendIntent, "Share using"));
     }
 
+    public void showDialog() {
+        LayoutInflater inflater = getLayoutInflater();
+        View alertLayout = inflater.inflate(R.layout.custom_dialog, null);
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        txtVersion = alertLayout.findViewById(R.id.txtVersion);
+        txtVersion.setText("Version " + BuildConfig.VERSION_NAME);
+        alert.setView(alertLayout);
+        alert.setCancelable(true);
+        AlertDialog dialog = alert.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
 }

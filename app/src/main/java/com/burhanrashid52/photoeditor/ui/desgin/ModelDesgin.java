@@ -1,4 +1,4 @@
-package com.burhanrashid52.photoeditor.ui.main;
+package com.burhanrashid52.photoeditor.ui.desgin;
 
 public class ModelDesgin {
     String nameDes;
