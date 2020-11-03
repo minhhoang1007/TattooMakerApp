@@ -53,19 +53,34 @@
     <!--        android:layout_height="50dp"-->
     <!--        android:orientation="horizontal">-->
     <!--    </LinearLayout>-->
-    <ja.burhanrashid52.photoeditor.PhotoEditorView
-        android:id="@+id/photoEditorView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
         android:layout_marginTop="120dp"
-        android:background="@color/black"
+        android:layout_marginBottom="120dp"
         app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:photo_src="@drawable/got_s"/>
+        app:layout_constraintVertical_bias="0.0">
+        <ImageView
+            android:id="@+id/imgTshirt"
+            android:src="@drawable/got_s"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <ja.burhanrashid52.photoeditor.PhotoEditorView
+            android:id="@+id/photoEditorView"
+            android:layout_marginTop="80dp"
+            android:layout_marginBottom="70dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:photo_src="@drawable/got_s"/>
+    </RelativeLayout>
+
 
     <ImageView
         android:id="@+id/imgUndo"
@@ -116,6 +131,7 @@
         android:orientation="horizontal"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
+        android:layout_gravity="center"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -139,7 +155,6 @@
         android:id="@+id/imgShare"
         android:layout_width="@dimen/top_tool_icon_width"
         android:layout_height="40dp"
-        android:background="@color/semi_black_transparent"
         android:padding="8dp"
         android:src="@drawable/color_wheel"
         app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"

@@ -4,29 +4,42 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toolbar;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
 import androidx.annotation.UiThread;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.view.MotionEvent.INVALID_POINTER_ID;
 
 /**
  * <p>
@@ -41,6 +54,7 @@ import java.util.List;
 public class PhotoEditor implements BrushViewChangeListener {
 
     private static final String TAG = "PhotoEditor";
+    public static float des;
     private final LayoutInflater mLayoutInflater;
     private Context context;
     private PhotoEditorView parentView;
@@ -53,7 +67,9 @@ public class PhotoEditor implements BrushViewChangeListener {
     private boolean isTextPinchZoomable;
     private Typeface mDefaultTextTypeface;
     private Typeface mDefaultEmojiTypeface;
-
+    private int mActivePointerId = INVALID_POINTER_ID;
+    private double mCurrAngle, mPrevAngle;
+    public boolean isRotate = false;
 
     private PhotoEditor(Builder builder) {
         this.context = builder.context;
@@ -70,27 +86,26 @@ public class PhotoEditor implements BrushViewChangeListener {
         redoViews = new ArrayList<>();
     }
 
-    /**
-     * This will add image on {@link PhotoEditorView} which you drag,rotate and scale using pinch
-     * if {@link PhotoEditor.Builder#setPinchTextScalable(boolean)} enabled
-     *
-     * @param desiredImage bitmap image you want to add
-     */
     public void addImage(Bitmap desiredImage) {
         final View imageRootView = getLayout(ViewType.IMAGE);
         final ImageView imageView = imageRootView.findViewById(R.id.imgPhotoEditorImage);
         final FrameLayout frmBorder = imageRootView.findViewById(R.id.frmBorder);
         final ImageView imgClose = imageRootView.findViewById(R.id.imgPhotoEditorClose);
+        final ImageView imgFlip = imageRootView.findViewById(R.id.imgPhotoEditorFlip);
         final ImageView imgResize = imageRootView.findViewById(R.id.imgPhotoEditorResize);
+        final ImageView imgRotate = imageRootView.findViewById(R.id.imgPhotoEditorRotate);
         imageView.setImageBitmap(desiredImage);
-
-        MultiTouchListener multiTouchListener = getMultiTouchListener();
+        des = imageRootView.getContext().getResources().getDisplayMetrics().density;
+        MultiTouchListener multiTouchListener = getMultiTouchListener(imageRootView);
         multiTouchListener.setOnGestureControl(new MultiTouchListener.OnGestureControl() {
             @Override
             public void onClick() {
                 boolean isBackgroundVisible = frmBorder.getTag() != null && (boolean) frmBorder.getTag();
                 frmBorder.setBackgroundResource(isBackgroundVisible ? 0 : R.drawable.rounded_border_tv);
                 imgClose.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
+                imgFlip.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
+                imgResize.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
+                imgRotate.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
                 frmBorder.setTag(!isBackgroundVisible);
             }
 
@@ -101,31 +116,131 @@ public class PhotoEditor implements BrushViewChangeListener {
         });
 
         imageRootView.setOnTouchListener(multiTouchListener);
+        imgFlip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (imageView.getScaleX() == 1)
+                    imageView.setScaleX(-1);
+                else imageView.setScaleX(1);
 
+            }
+        });
         addViewToParent(imageRootView, ViewType.IMAGE);
+        imgResize.setOnTouchListener(new View.OnTouchListener() {
+            float centerX, centerY, startR, startScale, startX, startY;
+            View deleteView = imageRootView.findViewById(R.id.imgPhotoEditorClose);
+            View flipView = imageRootView.findViewById(R.id.imgPhotoEditorFlip);
+            View scaleView = imageRootView.findViewById(R.id.imgPhotoEditorResize);
+            View rotateView = imageRootView.findViewById(R.id.imgPhotoEditorRotate);
 
+            @Override
+            public boolean onTouch(View v, MotionEvent e) {
+                if (e.getAction() == MotionEvent.ACTION_DOWN) {
+
+                    // calculate center of image
+                    centerX = (imageRootView.getLeft() + imageRootView.getRight()) / 10f;
+                    centerY = (imageRootView.getTop() + imageRootView.getBottom()) / 10f;
+
+                    // recalculate coordinates of starting point
+                    startX = e.getRawX() - imgResize.getX() - centerX;
+                    startY = e.getRawY() - imgResize.getY() - centerY;
+
+                    // get starting distance and scale
+                    startR = (float) Math.hypot(e.getRawX() - startX, e.getRawY() - startY);
+                    startScale = imageRootView.getScaleX();
+                    Log.e(TAG, "onTouch: 123");
+                } else if (e.getAction() == MotionEvent.ACTION_MOVE) {
+
+                    // calculate new distance
+                    float newR = (float) Math.hypot(e.getRawX() - startX, e.getRawY() - startY);
+
+                    // set new scale
+                    float newScale = newR / startR * startScale;
+                    imageRootView.setScaleX(newScale);
+                    imageRootView.setScaleY(newScale);
+                    if (deleteView != null) {
+                        deleteView.setScaleX(1 / newScale);
+                        deleteView.setScaleY(1 / newScale);
+                    }
+                    if (flipView != null) {
+                        flipView.setScaleX(1 / newScale);
+                        flipView.setScaleY(1 / newScale);
+                    }
+                    if (scaleView != null) {
+                        scaleView.setScaleX(1 / newScale);
+                        scaleView.setScaleY(1 / newScale);
+                    }
+                    if (rotateView != null) {
+                        rotateView.setScaleX(1 / newScale);
+                        rotateView.setScaleY(1 / newScale);
+                    }
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layoutParams.setMargins((int) (15 * des / newScale), (int) (15 * des / newScale), (int) (15 * des / newScale), (int) (15 * des / newScale));
+                    frmBorder.setLayoutParams(layoutParams);
+                    // move handler image
+//                    imgResize.setX(centerX + emojiRootView.getWidth()/2f * newScale);
+//                    imgResize.setY(centerY + emojiRootView.getHeight()/2f * newScale);
+                    Log.e(TAG, "onTouch: 1234");
+                } else if (e.getAction() == MotionEvent.ACTION_UP) {
+
+                }
+                imgResize.setVisibility(View.VISIBLE);
+                return true;
+            }
+        });
+        imgRotate.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                final float xc = imageRootView.getWidth() / 2;
+                final float yc = imageRootView.getHeight() / 2;
+                final float x = event.getX();
+                final float y = event.getY();
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+//                        imageRootView.clearAnimation();
+//                        double mCurrAngle = Math.toDegrees(Math.atan2(x - xc, yc - y));
+                        break;
+                    }
+                    case MotionEvent.ACTION_MOVE: {
+                        //mCurrAngle = Math.toDegrees(Math.atan2(x - xc, yc - y));
+                        mCurrAngle = Math.toDegrees(Math.atan(x-xc));
+                        mPrevAngle = Math.toDegrees(Math.atan(y-yc));
+                        //mPrevAngle = mCurrAngle;
+                        animate(imageRootView, mPrevAngle, mCurrAngle, 1500);
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP: {
+                        mPrevAngle = mCurrAngle = 0;
+                        break;
+                    }
+                }
+                return true;
+            }
+        });
     }
 
-    /**
-     * This add the text on the {@link PhotoEditorView} with provided parameters
-     * by default {@link TextView#setText(int)} will be 18sp
-     *
-     * @param text              text to display
-     * @param colorCodeTextView text color to be displayed
-     */
+    private void animate(View view, double fromDegrees, double toDegrees, long durationMillis) {
+        final RotateAnimation rotate = new RotateAnimation((float) fromDegrees, (float) toDegrees,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+        rotate.setDuration(durationMillis);
+        rotate.setFillEnabled(true);
+        rotate.setFillAfter(true);
+        view.startAnimation(rotate);
+    }
+
+    //    private static void adjustTranslation(View view, float deltaX, float deltaY) {
+//        Log.e("adjustTranslation", "adjustTranslation: " + deltaX + "-----" + deltaY);
+//        float[] deltaVector = {deltaX, deltaY};
+//        view.getMatrix().mapVectors(deltaVector);
+//        view.setTranslationX(view.getTranslationX() + deltaVector[0]);
+//        view.setTranslationY(view.getTranslationY() + deltaVector[1]);
+//    }
     @SuppressLint("ClickableViewAccessibility")
     public void addText(String text, final int colorCodeTextView) {
         addText(null, text, colorCodeTextView);
     }
 
-    /**
-     * This add the text on the {@link PhotoEditorView} with provided parameters
-     * by default {@link TextView#setText(int)} will be 18sp
-     *
-     * @param textTypeface      typeface for custom font in the text
-     * @param text              text to display
-     * @param colorCodeTextView text color to be displayed
-     */
     @SuppressLint("ClickableViewAccessibility")
     public void addText(@Nullable Typeface textTypeface, String text, final int colorCodeTextView) {
         final TextStyleBuilder styleBuilder = new TextStyleBuilder();
@@ -138,33 +253,32 @@ public class PhotoEditor implements BrushViewChangeListener {
         addText(text, styleBuilder);
     }
 
-    /**
-     * This add the text on the {@link PhotoEditorView} with provided parameters
-     * by default {@link TextView#setText(int)} will be 18sp
-     *
-     * @param text         text to display
-     * @param styleBuilder text style builder with your style
-     */
+
     @SuppressLint("ClickableViewAccessibility")
     public void addText(String text, @Nullable TextStyleBuilder styleBuilder) {
         brushDrawingView.setBrushDrawingMode(false);
         final View textRootView = getLayout(ViewType.TEXT);
         final TextView textInputTv = textRootView.findViewById(R.id.tvPhotoEditorText);
         final ImageView imgClose = textRootView.findViewById(R.id.imgPhotoEditorClose);
+        final ImageView imgFlip = textRootView.findViewById(R.id.imgPhotoEditorFlip);
         final ImageView imgResize = textRootView.findViewById(R.id.imgPhotoEditorResize);
+        final ImageView imgRotate = textRootView.findViewById(R.id.imgPhotoEditorRotate);
         final FrameLayout frmBorder = textRootView.findViewById(R.id.frmBorder);
-
+        des = textRootView.getContext().getResources().getDisplayMetrics().density;
         textInputTv.setText(text);
         if (styleBuilder != null)
             styleBuilder.applyStyle(textInputTv);
 
-        MultiTouchListener multiTouchListener = getMultiTouchListener();
+        MultiTouchListener multiTouchListener = getMultiTouchListener(textRootView);
         multiTouchListener.setOnGestureControl(new MultiTouchListener.OnGestureControl() {
             @Override
             public void onClick() {
                 boolean isBackgroundVisible = frmBorder.getTag() != null && (boolean) frmBorder.getTag();
                 frmBorder.setBackgroundResource(isBackgroundVisible ? 0 : R.drawable.rounded_border_tv);
                 imgClose.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
+                imgFlip.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
+                imgResize.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
+                imgRotate.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
                 frmBorder.setTag(!isBackgroundVisible);
             }
 
@@ -177,9 +291,95 @@ public class PhotoEditor implements BrushViewChangeListener {
                 }
             }
         });
+        //multiTouchListener.onTouch(textRootView, imgResize.onTouchEvent());
 
         textRootView.setOnTouchListener(multiTouchListener);
+        imgFlip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (textInputTv.getScaleX() == 1)
+                    textInputTv.setScaleX(-1);
+                else textInputTv.setScaleX(1);
+
+            }
+        });
         addViewToParent(textRootView, ViewType.TEXT);
+        imgResize.setOnTouchListener(new View.OnTouchListener() {
+            float centerX, centerY, startR, startScale, startX, startY;
+            View deleteView = textRootView.findViewById(R.id.imgPhotoEditorClose);
+            View flipView = textRootView.findViewById(R.id.imgPhotoEditorFlip);
+            View scaleView = textRootView.findViewById(R.id.imgPhotoEditorResize);
+            View rotateView = textRootView.findViewById(R.id.imgPhotoEditorRotate);
+
+            @Override
+            public boolean onTouch(View v, MotionEvent e) {
+                if (e.getAction() == MotionEvent.ACTION_DOWN) {
+
+                    // calculate center of image
+                    centerX = (textRootView.getLeft() + textRootView.getRight()) / 10f;
+                    centerY = (textRootView.getTop() + textRootView.getBottom()) / 10f;
+
+                    // recalculate coordinates of starting point
+                    startX = e.getRawX() - imgResize.getX() - centerX;
+                    startY = e.getRawY() - imgResize.getY() - centerY;
+
+                    // get starting distance and scale
+                    startR = (float) Math.hypot(e.getRawX() - startX, e.getRawY() - startY);
+                    startScale = textRootView.getScaleX();
+                    Log.e(TAG, "onTouch: 123");
+                } else if (e.getAction() == MotionEvent.ACTION_MOVE) {
+
+                    // calculate new distance
+                    float newR = (float) Math.hypot(e.getRawX() - startX, e.getRawY() - startY);
+
+                    // set new scale
+                    float newScale = newR / startR * startScale;
+                    textRootView.setScaleX(newScale);
+                    textRootView.setScaleY(newScale);
+                    if (deleteView != null) {
+                        deleteView.setScaleX(1 / newScale);
+                        deleteView.setScaleY(1 / newScale);
+                    }
+                    if (flipView != null) {
+                        flipView.setScaleX(1 / newScale);
+                        flipView.setScaleY(1 / newScale);
+                    }
+                    if (scaleView != null) {
+                        scaleView.setScaleX(1 / newScale);
+                        scaleView.setScaleY(1 / newScale);
+                    }
+                    if (rotateView != null) {
+                        rotateView.setScaleX(1 / newScale);
+                        rotateView.setScaleY(1 / newScale);
+                    }
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layoutParams.setMargins((int) (15 * des / newScale), (int) (15 * des / newScale), (int) (15 * des / newScale), (int) (15 * des / newScale));
+                    frmBorder.setLayoutParams(layoutParams);
+                    // move handler image
+//                    imgResize.setX(centerX + textRootView.getWidth()/2f * newScale);
+//                    imgResize.setY(centerY + textRootView.getHeight()/2f * newScale);
+                    Log.e(TAG, "onTouch: 1234");
+                } else if (e.getAction() == MotionEvent.ACTION_UP) {
+
+                }
+
+                return true;
+            }
+
+        });
+        imgRotate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isRotate == false) {
+                    textInputTv.setRotation(180);
+                    isRotate = true;
+                } else {
+                    textInputTv.setRotation(0);
+                    isRotate = false;
+                }
+
+            }
+        });
     }
 
     /**
@@ -224,7 +424,6 @@ public class PhotoEditor implements BrushViewChangeListener {
             inputTextView.setText(inputText);
             if (styleBuilder != null)
                 styleBuilder.applyStyle(inputTextView);
-
             parentView.updateViewLayout(view, view.getLayoutParams());
             int i = addedViews.indexOf(view);
             if (i > -1) addedViews.set(i, view);
@@ -254,19 +453,25 @@ public class PhotoEditor implements BrushViewChangeListener {
         final TextView emojiTextView = emojiRootView.findViewById(R.id.tvPhotoEditorText);
         final FrameLayout frmBorder = emojiRootView.findViewById(R.id.frmBorder);
         final ImageView imgClose = emojiRootView.findViewById(R.id.imgPhotoEditorClose);
+        final ImageView imgFlip = emojiRootView.findViewById(R.id.imgPhotoEditorFlip);
         final ImageView imgResize = emojiRootView.findViewById(R.id.imgPhotoEditorResize);
+        final ImageView imgRotate = emojiRootView.findViewById(R.id.imgPhotoEditorRotate);
+        des = emojiRootView.getContext().getResources().getDisplayMetrics().density;
         if (emojiTypeface != null) {
             emojiTextView.setTypeface(emojiTypeface);
         }
         emojiTextView.setTextSize(56);
         emojiTextView.setText(emojiName);
-        MultiTouchListener multiTouchListener = getMultiTouchListener();
+        MultiTouchListener multiTouchListener = getMultiTouchListener(emojiRootView);
         multiTouchListener.setOnGestureControl(new MultiTouchListener.OnGestureControl() {
             @Override
             public void onClick() {
                 boolean isBackgroundVisible = frmBorder.getTag() != null && (boolean) frmBorder.getTag();
                 frmBorder.setBackgroundResource(isBackgroundVisible ? 0 : R.drawable.rounded_border_tv);
                 imgClose.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
+                imgFlip.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
+                imgResize.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
+                imgRotate.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
                 frmBorder.setTag(!isBackgroundVisible);
             }
 
@@ -275,7 +480,92 @@ public class PhotoEditor implements BrushViewChangeListener {
             }
         });
         emojiRootView.setOnTouchListener(multiTouchListener);
+        imgResize.setOnTouchListener(new View.OnTouchListener() {
+            float centerX, centerY, startR, startScale, startX, startY;
+            View deleteView = emojiRootView.findViewById(R.id.imgPhotoEditorClose);
+            View flipView = emojiRootView.findViewById(R.id.imgPhotoEditorFlip);
+            View scaleView = emojiRootView.findViewById(R.id.imgPhotoEditorResize);
+            View rotateView = emojiRootView.findViewById(R.id.imgPhotoEditorRotate);
+
+            @Override
+            public boolean onTouch(View v, MotionEvent e) {
+                if (e.getAction() == MotionEvent.ACTION_DOWN) {
+
+                    // calculate center of image
+                    centerX = (emojiRootView.getLeft() + emojiRootView.getRight()) / 10f;
+                    centerY = (emojiRootView.getTop() + emojiRootView.getBottom()) / 10f;
+
+                    // recalculate coordinates of starting point
+                    startX = e.getRawX() - imgResize.getX() - centerX;
+                    startY = e.getRawY() - imgResize.getY() - centerY;
+
+                    // get starting distance and scale
+                    startR = (float) Math.hypot(e.getRawX() - startX, e.getRawY() - startY);
+                    startScale = emojiRootView.getScaleX();
+                    Log.e(TAG, "onTouch: 123");
+                } else if (e.getAction() == MotionEvent.ACTION_MOVE) {
+
+                    // calculate new distance
+                    float newR = (float) Math.hypot(e.getRawX() - startX, e.getRawY() - startY);
+
+                    // set new scale
+                    float newScale = newR / startR * startScale;
+                    emojiRootView.setScaleX(newScale);
+                    emojiRootView.setScaleY(newScale);
+                    if (deleteView != null) {
+                        deleteView.setScaleX(1 / newScale);
+                        deleteView.setScaleY(1 / newScale);
+                    }
+                    if (flipView != null) {
+                        flipView.setScaleX(1 / newScale);
+                        flipView.setScaleY(1 / newScale);
+                    }
+                    if (scaleView != null) {
+                        scaleView.setScaleX(1 / newScale);
+                        scaleView.setScaleY(1 / newScale);
+                    }
+                    if (rotateView != null) {
+                        rotateView.setScaleX(1 / newScale);
+                        rotateView.setScaleY(1 / newScale);
+                    }
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layoutParams.setMargins((int) (15 * des / newScale), (int) (15 * des / newScale), (int) (15 * des / newScale), (int) (15 * des / newScale));
+                    frmBorder.setLayoutParams(layoutParams);
+                    // move handler image
+//                    imgResize.setX(centerX + emojiRootView.getWidth()/2f * newScale);
+//                    imgResize.setY(centerY + emojiRootView.getHeight()/2f * newScale);
+                    Log.e(TAG, "onTouch: 1234");
+                } else if (e.getAction() == MotionEvent.ACTION_UP) {
+
+                }
+                imgResize.setVisibility(View.VISIBLE);
+                return true;
+            }
+        });
+        imgRotate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isRotate == false) {
+                    emojiTextView.setRotation(180);
+                    isRotate = true;
+                } else {
+                    emojiTextView.setRotation(0);
+                    isRotate = false;
+                }
+
+            }
+        });
+        imgFlip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (emojiTextView.getScaleX() == 1)
+                    emojiTextView.setScaleX(-1);
+                else emojiTextView.setScaleX(1);
+
+            }
+        });
         addViewToParent(emojiRootView, ViewType.EMOJI);
+
     }
 
 
@@ -300,9 +590,9 @@ public class PhotoEditor implements BrushViewChangeListener {
      * @return scalable multitouch listener
      */
     @NonNull
-    private MultiTouchListener getMultiTouchListener() {
+    private MultiTouchListener getMultiTouchListener(View rootView) {
         MultiTouchListener multiTouchListener = new MultiTouchListener(
-                deleteView,
+                rootView,
                 parentView,
                 this.imageView,
                 isTextPinchZoomable,
@@ -324,20 +614,40 @@ public class PhotoEditor implements BrushViewChangeListener {
         switch (viewType) {
             case TEXT:
                 rootView = mLayoutInflater.inflate(R.layout.view_photo_editor_text, null);
-                TextView txtText = rootView.findViewById(R.id.tvPhotoEditorText);
+                final TextView txtText = rootView.findViewById(R.id.tvPhotoEditorText);
                 if (txtText != null && mDefaultTextTypeface != null) {
                     txtText.setGravity(Gravity.CENTER);
                     if (mDefaultEmojiTypeface != null) {
                         txtText.setTypeface(mDefaultTextTypeface);
                     }
                 }
+//                ImageView flip = rootView.findViewById(R.id.imgPhotoEditorFlip);
+//                if (flip != null)
+//                    flip.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            txtText.setScaleX(-1);
+//                        }
+//                    });
                 break;
-            case IMAGE:
+            case IMAGE: {
                 rootView = mLayoutInflater.inflate(R.layout.view_photo_editor_image, null);
-                break;
-            case EMOJI:
+                final ImageView imgSticker = rootView.findViewById(R.id.imgPhotoEditorImage);
+                //flip
+//                ImageView imgFlip = rootView.findViewById(R.id.imgPhotoEditorFlip);
+//                if (imgFlip != null)
+//                    imgFlip.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            imgSticker.setScaleX(-1);
+//                        }
+//                    });
+
+            }
+            break;
+            case EMOJI: {
                 rootView = mLayoutInflater.inflate(R.layout.view_photo_editor_text, null);
-                TextView txtTextEmoji = rootView.findViewById(R.id.tvPhotoEditorText);
+                final TextView txtTextEmoji = rootView.findViewById(R.id.tvPhotoEditorText);
                 if (txtTextEmoji != null) {
                     if (mDefaultEmojiTypeface != null) {
                         txtTextEmoji.setTypeface(mDefaultEmojiTypeface);
@@ -345,7 +655,16 @@ public class PhotoEditor implements BrushViewChangeListener {
                     txtTextEmoji.setGravity(Gravity.CENTER);
                     txtTextEmoji.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
                 }
+//                ImageView imgFlip = rootView.findViewById(R.id.imgPhotoEditorFlip);
+//                if (imgFlip != null)
+//                    imgFlip.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            txtTextEmoji.setScaleX(-1);
+//                        }
+//                    });
                 break;
+            }
         }
 
         if (rootView != null) {
@@ -353,13 +672,21 @@ public class PhotoEditor implements BrushViewChangeListener {
             //when we remove the view from stack i.e onRemoveViewListener(ViewType viewType, int numberOfAddedViews);
             rootView.setTag(viewType);
             final ImageView imgClose = rootView.findViewById(R.id.imgPhotoEditorClose);
-            final ImageView imgResize = rootView.findViewById(R.id.imgPhotoEditorResize);
             final View finalRootView = rootView;
             if (imgClose != null) {
                 imgClose.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         viewUndo(finalRootView, viewType);
+                    }
+                });
+            }
+            final ImageView imageViewFlip = rootView.findViewById(R.id.imgPhotoEditorFlip);
+            if (imageViewFlip != null) {
+                imageViewFlip.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
                     }
                 });
             }
@@ -576,10 +903,8 @@ public class PhotoEditor implements BrushViewChangeListener {
                 frmBorder.setBackgroundResource(0);
             }
             ImageView imgClose = childAt.findViewById(R.id.imgPhotoEditorClose);
-            ImageView imgReSize = childAt.findViewById(R.id.imgPhotoEditorResize);
             if (imgClose != null) {
                 imgClose.setVisibility(View.GONE);
-                imgReSize.setVisibility(View.GONE);
             }
         }
     }
@@ -915,6 +1240,7 @@ public class PhotoEditor implements BrushViewChangeListener {
         public PhotoEditor build() {
             return new PhotoEditor(this);
         }
+
     }
 
     /**

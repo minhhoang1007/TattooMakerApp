@@ -32,7 +32,7 @@ import android.view.View;
  *      {@link View}
  * </ul>
  */
-class ScaleGestureDetector {
+public class ScaleGestureDetector {
     private static final String TAG = "ScaleGestureDetector";
 
     /**

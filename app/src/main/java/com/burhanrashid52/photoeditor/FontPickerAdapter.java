@@ -12,8 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,15 +113,17 @@ public class FontPickerAdapter extends RecyclerView.Adapter<FontPickerAdapter.Vi
 
     public static List<String> getDefaultFonts(Context context) {
         ArrayList<String> colorPickerColors = new ArrayList<>();
-        colorPickerColors.add( "beyond_wonderland.ttf");
-        colorPickerColors.add( "emojione-android.ttf");
-        colorPickerColors.add( "roboto_black.ttf");
-        colorPickerColors.add( "roboto_blackitalic.ttf");
-        colorPickerColors.add( "roboto_bold.ttf");
-        colorPickerColors.add( "iloveyou.ttf");
-        colorPickerColors.add( "scrap_cursive.ttf");
-        colorPickerColors.add( "vniongdo.ttf");
-        colorPickerColors.add( "vnithufap.ttf");
+        colorPickerColors.add("beyond_wonderland.ttf");
+        colorPickerColors.add("emojione-android.ttf");
+        colorPickerColors.add("roboto_black.ttf");
+        colorPickerColors.add("roboto_blackitalic.ttf");
+        colorPickerColors.add("roboto_bold.ttf");
+        colorPickerColors.add("iloveyou.ttf");
+        colorPickerColors.add("scrap_cursive.ttf");
+        colorPickerColors.add("vniongdo.ttf");
+        colorPickerColors.add("vnithufap.ttf");
+        colorPickerColors.add("spring_time.ttf");
+        colorPickerColors.add("alexbrush.ttf");
         return colorPickerColors;
     }
 }

@@ -146,6 +146,10 @@ public class TextEditorDialogFragment extends DialogFragment {
                 if (!TextUtils.isEmpty(inputText) && mTextEditor != null && mFontCode != null) {
                     mTextEditor.onDone(inputText, mColorCode, mFontCode);
                 }
+                else if(!TextUtils.isEmpty(inputText) && mTextEditor != null && mFontCode == null){
+                    mFontCode = "roboto_bold.ttf";
+                    mTextEditor.onDone(inputText, mColorCode, mFontCode);
+                }
             }
         });
     }

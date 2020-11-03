@@ -177,6 +177,7 @@ public class DesginChooseActivity extends AppCompatActivity {
             public void onClickItem(int position) {
                 Intent intent = new Intent(getApplicationContext(), EditImageActivity.class);
                 intent.putExtra("desgin", imgChooseDes.get(position).getImgDes());
+                intent.putExtra("frame", R.drawable.img_frame);
                 startActivity(intent);
                 finish();
             }
