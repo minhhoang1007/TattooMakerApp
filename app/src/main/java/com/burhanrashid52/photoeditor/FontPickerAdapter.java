@@ -113,17 +113,25 @@ public class FontPickerAdapter extends RecyclerView.Adapter<FontPickerAdapter.Vi
 
     public static List<String> getDefaultFonts(Context context) {
         ArrayList<String> colorPickerColors = new ArrayList<>();
-        colorPickerColors.add("beyond_wonderland.ttf");
-        colorPickerColors.add("emojione-android.ttf");
-        colorPickerColors.add("roboto_black.ttf");
-        colorPickerColors.add("roboto_blackitalic.ttf");
-        colorPickerColors.add("roboto_bold.ttf");
-        colorPickerColors.add("iloveyou.ttf");
-        colorPickerColors.add("scrap_cursive.ttf");
-        colorPickerColors.add("vniongdo.ttf");
-        colorPickerColors.add("vnithufap.ttf");
-        colorPickerColors.add("spring_time.ttf");
-        colorPickerColors.add("alexbrush.ttf");
+        colorPickerColors.add("font_1.ttf");
+        colorPickerColors.add("font_2.ttf");
+        colorPickerColors.add("font_3.ttf");
+        colorPickerColors.add("font_4.ttf");
+        colorPickerColors.add("font_5.ttf");
+        colorPickerColors.add("font_6.ttf");
+        colorPickerColors.add("font_7.ttf");
+        colorPickerColors.add("font_8.ttf");
+        colorPickerColors.add("font_9.ttf");
+        colorPickerColors.add("font_10.ttf");
+        colorPickerColors.add("font_11.ttf");
+        colorPickerColors.add("font_12.ttf");
+        colorPickerColors.add("font_13.ttf");
+        colorPickerColors.add("font_14.ttf");
+        colorPickerColors.add("font_15.ttf");
+        colorPickerColors.add("font_16.ttf");
+        colorPickerColors.add("font_17.ttf");
+        colorPickerColors.add("font_18.ttf");
+        colorPickerColors.add("font_19.ttf");
         return colorPickerColors;
     }
 }

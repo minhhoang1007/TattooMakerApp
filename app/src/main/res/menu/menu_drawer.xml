@@ -17,7 +17,7 @@
             android:icon="@drawable/ic_error"
             android:title="About" />
         <item
-            android:id="@+id/favorite"
+            android:id="@+id/security"
             android:icon="@drawable/ic_security"
             android:title="Privacy policy" />
 

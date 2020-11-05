@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -17,7 +18,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.util.Base64;
+import android.graphics.BitmapFactory;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -25,11 +27,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.FileProvider;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.ChangeBounds;
 import androidx.transition.TransitionManager;
-
+import java.io.InputStream;
+import android.content.Context;
+import com.bumptech.glide.Glide;
 import com.burhanrashid52.photoeditor.base.BaseActivity;
 import com.burhanrashid52.photoeditor.common.Common;
 import com.burhanrashid52.photoeditor.filters.FilterListener;
@@ -48,6 +53,8 @@ import ja.burhanrashid52.photoeditor.SaveSettings;
 import ja.burhanrashid52.photoeditor.TextStyleBuilder;
 import ja.burhanrashid52.photoeditor.ViewType;
 
+import static com.yalantis.ucrop.util.BitmapLoadUtils.calculateInSampleSize;
+
 public class EditImageActivity extends BaseActivity implements OnPhotoEditorListener,
         View.OnClickListener,
         PropertiesBSFragment.Properties,
@@ -60,7 +67,6 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
     private static final int PICK_REQUEST = 53;
     PhotoEditor mPhotoEditor;
     private PhotoEditorView mPhotoEditorView;
-    private ImageView mImageTshirt;
     private PropertiesBSFragment mPropertiesBSFragment;
     private EmojiBSFragment mEmojiBSFragment;
     private StickerBSFragment mStickerBSFragment;
@@ -72,18 +78,18 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
     private ConstraintLayout mRootView;
     private ConstraintSet mConstraintSet = new ConstraintSet();
     private boolean mIsFilterVisible;
-    ImageView btnPlus, btnMinus;
     int offset = 0, duration = 100;
     float scaleX = 1.0f, scaleY = 1.0f;
     float maxZoomLimit = 2.5f, minZoomLimit = 1.0f;
     @Nullable
     @VisibleForTesting
     Uri mSaveImageUri;
-
+    String fileTattoo;
+    Bitmap btTattoo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        makeFullScreen();
+        //makeFullScreen();
         setContentView(R.layout.activity_edit_image);
 
         initViews();
@@ -108,37 +114,54 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         mRvFilters.setAdapter(mFilterViewAdapter);
 
 
-        //Typeface mTextRobotoTf = ResourcesCompat.getFont(this, R.font.roboto_medium);
-        //Typeface mEmojiTypeFace = Typeface.createFromAsset(getAssets(), "emojione-android.ttf");
+        Typeface mTextRobotoTf = ResourcesCompat.getFont(this, R.font.roboto_medium);
+        Typeface mEmojiTypeFace = Typeface.createFromAsset(getAssets(), "emojione-android.ttf");
 
         mPhotoEditor = new PhotoEditor.Builder(this, mPhotoEditorView)
                 .setPinchTextScalable(true) // set flag to make text scalable when pinch
-                //.setDefaultTextTypeface(mTextRobotoTf)
-                //.setDefaultEmojiTypeface(mEmojiTypeFace)
+                .setDefaultTextTypeface(mTextRobotoTf)
+                .setDefaultEmojiTypeface(mEmojiTypeFace)
                 .build(); // build photo editor sdk
 
         mPhotoEditor.setOnPhotoEditorListener(this);
-        //Set Image Dynamically
-        // mPhotoEditorView.getSource().setImageResource(R.drawable.color_palette);
+        if(fileTattoo != null){
+            btTattoo = StringToBitMap(fileTattoo);
+            Log.e(TAG, "handleIntentImage: " + btTattoo.toString() );
+            mPhotoEditor.addImage(btTattoo);
+        }
+        // Set Image Dynamically
+        // mPhotoEditorView.getSource().setImageResource(R.drawable.got_s);
     }
 
     private void handleIntentImage(ImageView source) {
         Intent intent = getIntent();
-        int intValue = intent.getIntExtra("frame", 0);
-        int intFrame = intent.getIntExtra("desgin", 0);
-        source.setImageResource(intValue);
-        mImageTshirt.setImageResource(intFrame);
-//        if (intent != null) {
-//            String intentType = intent.getType();
-//            if (intentType != null && intentType.startsWith("image/")) {
-//                Uri imageUri = intent.getData();
-//                if (imageUri != null) {
-//                    source.setImageURI(imageUri);
-//                }
-//            }
-//        }
+        String stringFrame = intent.getStringExtra("desgin");
+        Glide.with(this)
+                .asBitmap()
+                .load(stringFrame) // or URI/path
+                .into(source);
+        fileTattoo = intent.getStringExtra("fileTattoo");
     }
 
+    public Bitmap StringToBitMap(String encodedString) {
+        AssetManager assetManager = getAssets();
+        InputStream istr = null;
+        try {
+            istr = assetManager.open(encodedString);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Bitmap bitmap = BitmapFactory.decodeStream(istr);
+        return bitmap;
+//        try {
+//            byte[] encodeByte = Base64.decode(encodedString.getBytes(), Base64.DEFAULT);
+//            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+//            return bitmap;
+//        } catch (Exception e) {
+//            e.getMessage();
+//            return null;
+//        }
+    }
     private void initViews() {
         ImageView imgUndo;
         ImageView imgRedo;
@@ -147,12 +170,12 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         ImageView imgSave;
         ImageView imgClose;
         ImageView imgShare;
+
         mPhotoEditorView = findViewById(R.id.photoEditorView);
         mTxtCurrentTool = findViewById(R.id.txtCurrentTool);
         mRvTools = findViewById(R.id.rvConstraintTools);
         mRvFilters = findViewById(R.id.rvFilterView);
         mRootView = findViewById(R.id.rootView);
-        mImageTshirt = findViewById(R.id.imgTshirt);
 
         imgUndo = findViewById(R.id.imgUndo);
         imgUndo.setOnClickListener(this);
@@ -171,68 +194,8 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
 
         imgClose = findViewById(R.id.imgClose);
         imgClose.setOnClickListener(this);
-
-        imgShare = findViewById(R.id.imgShare);
-        imgShare.setOnClickListener(this);
-        btnPlus = findViewById(R.id.btnPlus);
-        btnMinus = findViewById(R.id.btnMinus);
-        btnPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                zoomIn(mImageTshirt);
-            }
-        });
-        btnMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                zoomOut(mImageTshirt);
-            }
-        });
-    }
-
-    private void zoomIn(View v) {
-//        if (scaleX < maxZoomLimit && scaleY < maxZoomLimit) {
-//            Animation animation = new ScaleAnimation(scaleX, (scaleX + 0.2f), scaleY, (scaleY + 0.2f), 50, 50);
-//            scaleX += 0.2f;
-//            scaleY += 0.2f;
-//            animation.setInterpolator(new DecelerateInterpolator());
-//            animation.setDuration(duration);
-//            animation.setStartOffset(offset);
-//            animation.setFillAfter(true);
-//            v.startAnimation(animation);
-//        }
-        float x = v.getScaleX();
-        float y = v.getScaleY();
-        if (x < 1.5f && y < 1.5f) {
-            v.setScaleX((float) (x + 0.1f));
-            v.setScaleY((float) (y + 0.1f));
-        }
-//        v.setScaleX((float) (x+ 0.2f));
-//        v.setScaleY((float) (y+ 0.2f));
-    }
-
-    private void zoomOut(View v) {
-//        if (scaleX > minZoomLimit && scaleY > minZoomLimit) {
-////            float x = v.getScaleX();
-////            float y = v.getScaleY();
-//            Animation animation = new ScaleAnimation(scaleX, (scaleX - 0.2f), scaleY, (scaleY - 0.2f), 50, 50);
-//            scaleY -= 0.2f;
-//            scaleX -= 0.2f;
-//            animation.setInterpolator(new DecelerateInterpolator());
-//            animation.setDuration(duration);
-//            animation.setStartOffset(offset);
-//            animation.setFillAfter(true);
-//            v.startAnimation(animation);
-//        }
-        float x = v.getScaleX();
-        float y = v.getScaleY();
-        if (x == 1 && y == 1) {
-            v.setScaleX(x);
-            v.setScaleY(y);
-        } else {
-            v.setScaleX((float) (x - 0.1f));
-            v.setScaleY((float) (y - 0.1f));
-        }
+//        imgShare = findViewById(R.id.imgShare);
+//        imgShare.setOnClickListener(this);
 
     }
 
@@ -248,7 +211,7 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
                 Typeface tf = Typeface.createFromAsset(getApplication().getAssets(), fontCode);
                 styleBuilder.withTextFont(tf);
                 mPhotoEditor.editText(rootView, inputText, styleBuilder);
-                mTxtCurrentTool.setText(R.string.label_text);
+                //mTxtCurrentTool.setText(R.string.label_text);
             }
         });
     }
@@ -292,9 +255,9 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
             case R.id.imgClose:
                 onBackPressed();
                 break;
-            case R.id.imgShare:
-                shareImage();
-                break;
+//            case R.id.imgShare:
+//                shareImage();
+//                break;
 
             case R.id.imgCamera:
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -310,28 +273,28 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         }
     }
 
-    private void shareImage() {
-        String[] listColors = new String[]{"White", "Black", "Red"};
-        Integer[] listCo = new Integer[]{R.color.white, R.color.black, R.color.red_color_picker};
-        AlertDialog.Builder mBuilder = new AlertDialog.Builder(EditImageActivity.this);
-        mBuilder.setTitle("Choose an color");
-        mBuilder.setIcon(R.drawable.cate_1_15);
-        mBuilder.setSingleChoiceItems(listColors, -1, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                // mRootView.setBackgroundColor(listCo[i]);
-                mPhotoEditorView.setBackgroundColor(listCo[i]);
-                dialogInterface.dismiss();
-            }
-        });
-        mBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        AlertDialog mDialog = mBuilder.create();
-        mDialog.show();
+//    private void shareImage() {
+//        String[] listColors = new String[]{"White", "Black", "Red"};
+//        Integer[] listCo = new Integer[]{R.color.white, R.color.black, R.color.red_color_picker};
+//        AlertDialog.Builder mBuilder = new AlertDialog.Builder(EditImageActivity.this);
+//        mBuilder.setTitle("Choose an color");
+//        mBuilder.setIcon(R.drawable.ic_share);
+//        mBuilder.setSingleChoiceItems(listColors, -1, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                // mRootView.setBackgroundColor(listCo[i]);
+//                mPhotoEditorView.setBackgroundColor(listCo[i]);
+//                dialogInterface.dismiss();
+//            }
+//        });
+//        mBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                dialogInterface.dismiss();
+//            }
+//        });
+//        AlertDialog mDialog = mBuilder.create();
+//        mDialog.show();
 //        if (mSaveImageUri == null) {
 //            showSnackbar(getString(R.string.msg_save_image_to_share));
 //            return;
@@ -341,7 +304,7 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
 //        intent.setType("image/*");
 //        intent.putExtra(Intent.EXTRA_STREAM, buildFileProviderUri(mSaveImageUri));
 //        startActivity(Intent.createChooser(intent, getString(R.string.msg_share_image)));
-    }
+    // }
 
     private Uri buildFileProviderUri(@NonNull Uri uri) {
         return FileProvider.getUriForFile(this,
@@ -486,9 +449,13 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
     public void onToolSelected(ToolType toolType) {
         switch (toolType) {
             case BRUSH:
-                mPhotoEditor.setBrushDrawingMode(true);
-                mTxtCurrentTool.setText(R.string.label_brush);
-                mPropertiesBSFragment.show(getSupportFragmentManager(), mPropertiesBSFragment.getTag());
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_REQUEST);
+//                mPhotoEditor.setBrushDrawingMode(true);
+//                mTxtCurrentTool.setText(R.string.label_brush);
+//                mPropertiesBSFragment.show(getSupportFragmentManager(), mPropertiesBSFragment.getTag());
                 break;
             case TEXT:
                 TextEditorDialogFragment textEditorDialogFragment = TextEditorDialogFragment.show(this);
@@ -504,10 +471,10 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
                     }
                 });
                 break;
-            case ERASER:
-                mPhotoEditor.brushEraser();
-                mTxtCurrentTool.setText(R.string.label_eraser_mode);
-                break;
+//            case ERASER:
+//                mPhotoEditor.brushEraser();
+//                mTxtCurrentTool.setText(R.string.label_eraser_mode);
+//                break;
 //            case FILTER:
 ////                mTxtCurrentTool.setText(R.string.label_filter);
 ////                showFilter(true);

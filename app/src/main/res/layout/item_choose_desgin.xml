@@ -20,9 +20,9 @@
 
         <ImageView
             android:id="@+id/imgDesgin"
+            android:layout_margin="3dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_height="match_parent"
             android:scaleType="fitXY"
             android:src="@drawable/gallery" />
     </RelativeLayout>

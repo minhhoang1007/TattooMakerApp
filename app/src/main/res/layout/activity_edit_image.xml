@@ -5,14 +5,13 @@
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <RelativeLayout
         android:id="@+id/relAppbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/blue_light">
+        android:layout_height="60dp"
+        android:background="@color/black80">
 
         <ImageView
             android:id="@+id/imgClose"
@@ -29,6 +28,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:text="@string/app_name"
+            android:textSize="18sp"
             android:textColor="@android:color/white" />
 
         <ImageView
@@ -53,33 +53,14 @@
     <!--        android:layout_height="50dp"-->
     <!--        android:orientation="horizontal">-->
     <!--    </LinearLayout>-->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:layout_marginTop="120dp"
-        android:layout_marginBottom="120dp"
-        app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-        <ImageView
-            android:id="@+id/imgTshirt"
-            android:src="@drawable/got_s"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+
         <ja.burhanrashid52.photoeditor.PhotoEditorView
             android:id="@+id/photoEditorView"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="60dp"
             android:layout_marginBottom="70dp"
-            android:layout_marginLeft="100dp"
-            android:layout_marginRight="100dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:photo_src="@drawable/got_s"/>
-    </RelativeLayout>
 
 
     <ImageView
@@ -91,7 +72,6 @@
         app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
         app:layout_constraintEnd_toStartOf="@+id/imgRedo" />
     <!--    android:background="@color/semi_black_transparent"-->
-
     <ImageView
         android:id="@+id/imgRedo"
         android:layout_width="@dimen/top_tool_icon_width"
@@ -107,7 +87,7 @@
         android:layout_height="5dp"
         android:background="@color/semi_black_transparent"
         android:padding="8dp"
-        android:src="@drawable/ic_gallery"
+        android:src="@drawable/ic_galleryy"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
         app:layout_constraintStart_toStartOf="parent" />
@@ -150,38 +130,5 @@
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/rvConstraintTools"
         tools:listitem="@layout/row_filter_view" />
-
-    <ImageView
-        android:id="@+id/imgShare"
-        android:layout_width="@dimen/top_tool_icon_width"
-        android:layout_height="40dp"
-        android:padding="8dp"
-        android:src="@drawable/color_wheel"
-        app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/btnPlus"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/custom_button_zoom"
-        android:padding="10dp"
-        android:src="@drawable/ic_add"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relAppbar" />
-
-    <ImageView
-        android:id="@+id/btnMinus"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/custom_button_zoom"
-        android:padding="10dp"
-        android:src="@drawable/ic_minus"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relAppbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

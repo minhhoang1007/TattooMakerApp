@@ -18,9 +18,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.detail.DetailAlbumActivity" ></activity>
-        <activity android:name=".ui.album.AlbumActivity" />
-        <activity android:name=".ui.desgin.DesginChooseActivity" />
+        <activity android:name=".ui.unlock.UnlockTattooActivity"></activity>
+        <activity android:name=".ui.detail.DetailAlbumActivity" />
+        <activity android:name=".ui.mydesign.AlbumActivity" />
+        <activity android:name=".ui.sample.SampleActivity" />
         <activity android:name=".ui.detail.DetailIdeaActivity" />
         <activity android:name=".ui.idea.IdeaActivity" />
         <activity android:name=".ui.main.MainActivity">
@@ -45,6 +46,10 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <meta-data
             android:name="preloaded_fonts"

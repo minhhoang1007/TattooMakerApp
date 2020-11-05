@@ -39,9 +39,12 @@ public class IdeaAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ViewHolder viewHolder1 = (ViewHolder) holder;
-        Integer imgs = (Integer) listImg.get(position);
-//        viewHolder1.imgIdea.setImageResource(imgs);
-        Glide.with(holder.itemView.getContext()).load(imgs).into(viewHolder1.imgIdea);
+        String imgs = (String) listImg.get(position);
+        Glide.with(holder.itemView.getContext())
+                .asBitmap()
+                .load("file:///android_asset/" + imgs) // or URI/path
+                .into(viewHolder1.imgIdea);
+       // Glide.with(holder.itemView.getContext()).load(imgs).into(viewHolder1.imgIdea);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

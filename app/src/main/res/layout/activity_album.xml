@@ -5,23 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.album.AlbumActivity">
+    tools:context=".ui.mydesign.AlbumActivity">
     <RelativeLayout
-        android:background="@color/blue_light"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="60dp">
         <ImageView
             android:id="@+id/btnBackAlbum"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/ic_back_ios"
+            android:src="@drawable/ic_arrow_back"
             android:padding="10dp"
             android:layout_width="50dp"
             android:layout_height="50dp"/>
         <TextView
-            android:text="My Album"
+            android:text="My Design"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@color/yellow_color_picker"
             android:textSize="22sp"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"

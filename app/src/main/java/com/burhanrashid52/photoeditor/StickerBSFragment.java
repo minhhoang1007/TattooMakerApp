@@ -84,33 +84,10 @@ public class StickerBSFragment extends BottomSheetDialogFragment {
 
     public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHolder> {
 
-        int[] stickerList = new int[]{R.drawable.mixigaming,R.drawable.aa, R.drawable.bb, R.drawable.cate_1_0, R.drawable.cate_1_1,
-                R.drawable.cate_1_2, R.drawable.cate_1_3, R.drawable.cate_1_4,
-                R.drawable.cate_1_5, R.drawable.cate_1_6, R.drawable.cate_1_7, R.drawable.cate_1_8, R.drawable.cate_1_9,
-                R.drawable.cate_1_10, R.drawable.cate_1_11, R.drawable.cate_1_12, R.drawable.cate_1_13, R.drawable.cate_1_14,
-                R.drawable.cate_1_15, R.drawable.cate_1_16, R.drawable.cate_1_17, R.drawable.cate_1_18, R.drawable.cate_1_19,
-                R.drawable.cate_1_20, R.drawable.cate_1_21, R.drawable.cate_2_0, R.drawable.cate_2_1, R.drawable.cate_2_2,
-                R.drawable.cate_2_3, R.drawable.cate_2_4, R.drawable.cate_2_5, R.drawable.cate_2_6, R.drawable.cate_2_7,
-                R.drawable.cate_2_8, R.drawable.cate_2_9, R.drawable.cate_2_10, R.drawable.cate_2_11, R.drawable.cate_2_12,
-                R.drawable.cate_2_13, R.drawable.cate_2_14, R.drawable.cate_2_15, R.drawable.cate_3_0, R.drawable.cate_3_1,
-                R.drawable.cate_3_2, R.drawable.cate_3_3, R.drawable.cate_3_4, R.drawable.cate_3_5, R.drawable.cate_3_6,
-                R.drawable.cate_3_7, R.drawable.cate_3_8, R.drawable.cate_3_9, R.drawable.cate_3_10, R.drawable.cate_4_0,
-                R.drawable.cate_4_1, R.drawable.cate_4_2, R.drawable.cate_4_3, R.drawable.cate_4_4, R.drawable.cate_4_5,
-                R.drawable.cate_4_6, R.drawable.cate_4_7, R.drawable.cate_4_8, R.drawable.cate_4_9, R.drawable.cate_4_10,
-                R.drawable.cate_5_0, R.drawable.cate_5_1, R.drawable.cate_5_2, R.drawable.cate_5_3, R.drawable.cate_5_4,
-                R.drawable.cate_5_5, R.drawable.cate_5_6, R.drawable.cate_5_7, R.drawable.cate_5_8, R.drawable.cate_5_9,
-                R.drawable.cate_5_10, R.drawable.cate_5_11, R.drawable.cate_5_12, R.drawable.cate_5_13, R.drawable.cate_5_14,
-                R.drawable.cate_5_15, R.drawable.cate_5_16, R.drawable.cate_5_17, R.drawable.cate_5_18, R.drawable.cate_5_19,
-                R.drawable.cate_5_20, R.drawable.cate_5_21, R.drawable.cate_5_22, R.drawable.cate_5_23, R.drawable.cate_5_24,
-                R.drawable.cate_6_0, R.drawable.cate_6_1, R.drawable.cate_6_2, R.drawable.cate_6_3, R.drawable.cate_6_4,
-                R.drawable.cate_6_5, R.drawable.cate_6_6, R.drawable.cate_6_7, R.drawable.cate_6_8, R.drawable.cate_6_9,
-                R.drawable.cate_6_10, R.drawable.cate_6_11, R.drawable.cate_6_12, R.drawable.cate_6_13, R.drawable.cate_6_14,
-                R.drawable.cate_6_15, R.drawable.cate_6_16, R.drawable.cate_6_17, R.drawable.cate_7_0, R.drawable.cate_7_1,
-                R.drawable.cate_7_2, R.drawable.cate_7_3, R.drawable.cate_7_4, R.drawable.cate_7_5, R.drawable.cate_7_6,
-                R.drawable.cate_7_7, R.drawable.cate_7_8, R.drawable.cate_7_9, R.drawable.cate_7_10, R.drawable.cate_7_11,
-                R.drawable.cate_7_12, R.drawable.cate_7_13, R.drawable.cate_7_14, R.drawable.cate_7_15, R.drawable.cate_7_16,
-                R.drawable.cate_7_17, R.drawable.cate_7_18, R.drawable.cate_7_19, R.drawable.cate_7_20, R.drawable.cate_7_21,
-                R.drawable.cate_7_22, R.drawable.cate_7_23, R.drawable.cate_7_24, R.drawable.cate_7_25};
+        int[] stickerList = new int[]{ R.drawable.pack_1_0, R.drawable.pack_1_1,R.drawable.pack_1_2, R.drawable.pack_1_3,R.drawable.pack_1_4,
+                R.drawable.pack_1_5,R.drawable.pack_1_6,R.drawable.pack_1_7, R.drawable.pack_1_8, R.drawable.pack_1_9, R.drawable.pack_1_10,
+                R.drawable.pack_1_11, R.drawable.pack_1_12, R.drawable.pack_1_13, R.drawable.pack_1_14, R.drawable.pack_1_15, R.drawable.pack_1_16,
+                R.drawable.pack_1_17,R.drawable.pack_1_18, R.drawable.pack_1_19, R.drawable.pack_1_20};
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
