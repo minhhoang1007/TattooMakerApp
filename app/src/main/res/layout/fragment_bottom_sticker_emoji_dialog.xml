@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
@@ -8,10 +9,9 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/txtClose"
@@ -56,7 +56,195 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/rvEmoji"
+            >
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:background="@drawable/custom_button_click"
+                    android:id="@+id/btnOne"
+                    android:textColor="@color/white"
+                    android:layout_margin="3dp"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp"
+                    android:text="Pack 1" />
+                <RelativeLayout
+                    android:layout_width="80dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="3dp">
+                    <TextView
+                        android:id="@+id/btnTwo"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp"
+                        android:paddingTop="20dp"
+                        android:paddingLeft="15dp"
+                        android:background="@drawable/custom_button"
+                        android:textColor="@color/white"
+                        android:text="Pack 2" />
+                    <ImageView
+                        android:id="@+id/lock2"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/ic_padlock"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_margin="3dp"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp">
+                    <TextView
+                        android:id="@+id/btnThree"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp"
+                        android:paddingTop="20dp"
+                        android:paddingLeft="15dp"
+                        android:background="@drawable/custom_button"
+                        android:textColor="@color/white"
+                        android:text="Pack 3" />
+                    <ImageView
+                        android:id="@+id/lock3"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/ic_padlock"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_margin="3dp"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp">
+                    <TextView
+                        android:id="@+id/btnFour"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp"
+                        android:paddingTop="20dp"
+                        android:paddingLeft="15dp"
+                        android:background="@drawable/custom_button"
+                        android:textColor="@color/white"
+                        android:text="Pack 4" />
+                    <ImageView
+                        android:id="@+id/lock4"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/ic_padlock"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_margin="3dp"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp">
+                    <TextView
+                        android:id="@+id/btnFive"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp"
+                        android:paddingTop="20dp"
+                        android:paddingLeft="15dp"
+                        android:background="@drawable/custom_button"
+                        android:textColor="@color/white"
+                        android:text="Pack 5" />
+                    <ImageView
+                        android:id="@+id/lock5"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/ic_padlock"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_margin="3dp"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp">
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="60dp"
+                        android:id="@+id/btnSix"
+                        android:paddingTop="20dp"
+                        android:paddingLeft="15dp"
+                        android:background="@drawable/custom_button"
+                        android:textColor="@color/white"
+                        android:text="Pack 6" />
+                    <ImageView
+                        android:id="@+id/lock6"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/ic_padlock"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_margin="3dp"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp">
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="60dp"
+                        android:id="@+id/btnSeven"
+                        android:paddingTop="20dp"
+                        android:paddingLeft="15dp"
+                        android:background="@drawable/custom_button"
+                        android:textColor="@color/white"
+                        android:text="Pack 7" />
+                    <ImageView
+                        android:id="@+id/lock7"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/ic_padlock"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_margin="3dp"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp">
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="60dp"
+                        android:id="@+id/btnEight"
+                        android:paddingTop="20dp"
+                        android:paddingLeft="15dp"
+                        android:background="@drawable/custom_button"
+                        android:textColor="@color/white"
+                        android:text="Pack 8" />
+                    <ImageView
+                        android:id="@+id/lock8"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/ic_padlock"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_margin="3dp"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp">
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="60dp"
+                        android:id="@+id/btnNine"
+                        android:paddingTop="20dp"
+                        android:paddingLeft="15dp"
+                        android:background="@drawable/custom_button"
+                        android:textColor="@color/white"
+                        android:text="Pack 9" />
+                    <ImageView
+                        android:id="@+id/lock9"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/ic_padlock"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+                </RelativeLayout>
+            </LinearLayout>
+        </HorizontalScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

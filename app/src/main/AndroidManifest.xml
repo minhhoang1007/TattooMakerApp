@@ -18,19 +18,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.unlock.UnlockTattooActivity"></activity>
-        <activity android:name=".ui.detail.DetailAlbumActivity" />
-        <activity android:name=".ui.mydesign.AlbumActivity" />
-        <activity android:name=".ui.sample.SampleActivity" />
-        <activity android:name=".ui.detail.DetailIdeaActivity" />
-        <activity android:name=".ui.idea.IdeaActivity" />
-        <activity android:name=".ui.main.MainActivity">
+        <activity android:name=".ui.detail.ComppleteActivity"/>
+        <activity
+            android:name=".ui.loading.LoadingActivity"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.unlock.UnlockTattooActivity" />
+        <activity android:name=".ui.detail.DetailAlbumActivity" />
+        <activity android:name=".ui.mydesign.AlbumActivity" />
+        <activity android:name=".ui.sample.SampleActivity" />
+        <activity android:name=".ui.detail.DetailIdeaActivity" />
+        <activity android:name=".ui.idea.IdeaActivity" />
+        <activity android:name=".ui.main.MainActivity" />
         <activity
             android:name=".EditImageActivity"
             android:screenOrientation="portrait"
@@ -54,6 +58,9 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+        <meta-data
+            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
+            android:value="true" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

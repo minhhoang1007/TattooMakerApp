@@ -44,12 +44,13 @@
         style="@style/EditText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/add_text_color_picker_relative_layout"
+        android:layout_above="@+id/add_text_font_picker_relative_layout"
         android:layout_below="@+id/relChoose"
         android:background="@null"
         android:gravity="center"
+        android:focusable="true"
         android:inputType="textMultiLine"
-        android:textSize="40sp" />
+        android:textSize="30sp" />
     <RelativeLayout
         android:id="@+id/add_text_font_picker_relative_layout"
         android:layout_width="match_parent"

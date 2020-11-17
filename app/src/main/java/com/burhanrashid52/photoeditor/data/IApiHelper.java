@@ -6,9 +6,13 @@ import com.burhanrashid52.photoeditor.common.ImageList;
 import java.util.List;
 
 public interface IApiHelper {
-    void getData(IApiHelper.CallBackDataNetWork<String> callBackData);
+    void getAds(CallBackData<String> callBackData);
     interface CallBackDataNetWork<V>{
-        void onSuccess(List<ImageList> data);
+        void onSuccess(V data);
+        void onFail(String mess);
+    }
+    interface CallBackData<V>{
+        void onSuccess(V data);
         void onFail(String mess);
     }
 }

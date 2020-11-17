@@ -13,7 +13,7 @@ public class AppDataHelper implements IAppDataHelper {
     }
 
     @Override
-    public void getData(CallBackDataNetWork<String> callBackData) {
-        apiHelper.getData(callBackData);
+    public void getAds(CallBackData<String> callBackData) {
+        apiHelper.getAds(callBackData);
     }
 }

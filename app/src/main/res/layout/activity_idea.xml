@@ -21,7 +21,7 @@
         <TextView
             android:text="Tattoo Ideas"
             android:textStyle="bold"
-            android:textColor="@color/yellow_color_picker"
+            android:textColor="@color/red_color_picker"
             android:textSize="22sp"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"

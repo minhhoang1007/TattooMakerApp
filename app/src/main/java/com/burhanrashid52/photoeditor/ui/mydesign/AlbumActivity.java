@@ -1,5 +1,6 @@
 package com.burhanrashid52.photoeditor.ui.mydesign;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,10 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.burhanrashid52.photoeditor.R;
 import com.burhanrashid52.photoeditor.common.Common;
 import com.burhanrashid52.photoeditor.ui.detail.DetailAlbumActivity;
+import com.burhanrashid52.photoeditor.ui.idea.IdeaActivity;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,7 +41,8 @@ public class AlbumActivity extends AppCompatActivity implements IAlbumView {
     @BindView(R.id.noAlbum)
     ImageView noAlbum;
     AlbumAdapater adapater;
-
+    ProgressDialog progressDialog;
+    private InterstitialAd mInterstitialAd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +52,12 @@ public class AlbumActivity extends AppCompatActivity implements IAlbumView {
         ButterKnife.bind(this);
         initData();
         initView();
+        initAds();
     }
-
+    private void initAds(){
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(Common.inter_id_admob);
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -55,6 +66,9 @@ public class AlbumActivity extends AppCompatActivity implements IAlbumView {
     }
 
     private void initView() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading...");
         revAlbum.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new GridLayoutManager(this, 2);
         adapater = new AlbumAdapater(Common.listAlbum);
@@ -140,5 +154,35 @@ public class AlbumActivity extends AppCompatActivity implements IAlbumView {
     @Override
     public boolean isNetworkConnected() {
         return false;
+    }
+    @Override
+    public void onBackPressed() {
+        progressDialog.show();
+        Random rd = new Random();
+        int rands = rd.nextInt(10);
+        if(rands < Common.is_random) {
+            mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            mInterstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    progressDialog.dismiss();
+                    mInterstitialAd.show();
+                }
+
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    progressDialog.dismiss();
+                    AlbumActivity.super.onBackPressed();
+                }
+
+                @Override
+                public void onAdClosed() {
+                    AlbumActivity.super.onBackPressed();
+                }
+            });
+        }else{
+            progressDialog.dismiss();
+            AlbumActivity.super.onBackPressed();
+        }
     }
 }

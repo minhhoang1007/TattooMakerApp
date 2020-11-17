@@ -3,17 +3,19 @@ package com.burhanrashid52.photoeditor.ui.sample;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.burhanrashid52.photoeditor.EditImageActivity;
 import com.burhanrashid52.photoeditor.R;
-
+import com.burhanrashid52.photoeditor.common.Common;
 import java.util.ArrayList;
-
+import com.google.android.gms.ads.InterstitialAd;
+import android.app.ProgressDialog;
+import java.util.Random;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -27,6 +29,8 @@ public class SampleActivity extends AppCompatActivity {
     ArrayList<ModelSample> imgChooseDes;
     SampleAdapter adapter;
     String fileTattoo;
+    ProgressDialog progressDialog;
+    private InterstitialAd mInterstitialAd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +38,11 @@ public class SampleActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initData();
         initView();
+        initAds();
+    }
+    private void initAds(){
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(Common.inter_id_admob);
     }
     private void initData(){
         imgChooseDes = new ArrayList<>();
@@ -73,6 +82,9 @@ public class SampleActivity extends AppCompatActivity {
 
     }
     private void initView(){
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading...");
         Intent intent = getIntent();
         fileTattoo = intent.getStringExtra("fileTattoo");
         revChooseDesgin.setHasFixedSize(true);
@@ -94,5 +106,36 @@ public class SampleActivity extends AppCompatActivity {
     @OnClick(R.id.btnBackDes)
     public void onViewClicked() {
         onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        progressDialog.show();
+        Random rd = new Random();
+        int rands = rd.nextInt(10);
+        if(rands < Common.is_random) {
+            mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            mInterstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    progressDialog.dismiss();
+                    mInterstitialAd.show();
+                }
+
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    progressDialog.dismiss();
+                    SampleActivity.super.onBackPressed();
+                }
+
+                @Override
+                public void onAdClosed() {
+                    SampleActivity.super.onBackPressed();
+                }
+            });
+        }else{
+            progressDialog.dismiss();
+            SampleActivity.super.onBackPressed();
+        }
     }
 }

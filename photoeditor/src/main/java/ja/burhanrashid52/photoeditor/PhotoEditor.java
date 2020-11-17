@@ -59,6 +59,7 @@ public class PhotoEditor implements BrushViewChangeListener {
     private Context context;
     private PhotoEditorView parentView;
     private ImageView imageView;
+    private ImageView imageViewAdd;
     private View deleteView;
     private BrushDrawingView brushDrawingView;
     private List<View> addedViews;
@@ -85,16 +86,16 @@ public class PhotoEditor implements BrushViewChangeListener {
         addedViews = new ArrayList<>();
         redoViews = new ArrayList<>();
     }
-
     public void addImage(Bitmap desiredImage) {
         final View imageRootView = getLayout(ViewType.IMAGE);
-        final ImageView imageView = imageRootView.findViewById(R.id.imgPhotoEditorImage);
+//        final ImageView imageView = imageRootView.findViewById(R.id.imgPhotoEditorImage);
+        imageViewAdd = imageRootView.findViewById(R.id.imgPhotoEditorImage);
         final FrameLayout frmBorder = imageRootView.findViewById(R.id.frmBorder);
         final ImageView imgClose = imageRootView.findViewById(R.id.imgPhotoEditorClose);
         final ImageView imgFlip = imageRootView.findViewById(R.id.imgPhotoEditorFlip);
         final ImageView imgResize = imageRootView.findViewById(R.id.imgPhotoEditorResize);
-        final ImageView imgRotate = imageRootView.findViewById(R.id.imgPhotoEditorRotate);
-        imageView.setImageBitmap(desiredImage);
+//        final ImageView imgRotate = imageRootView.findViewById(R.id.imgPhotoEditorRotate);
+        imageViewAdd.setImageBitmap(desiredImage);
         des = imageRootView.getContext().getResources().getDisplayMetrics().density;
         MultiTouchListener multiTouchListener = getMultiTouchListener(imageRootView);
         multiTouchListener.setOnGestureControl(new MultiTouchListener.OnGestureControl() {
@@ -105,7 +106,7 @@ public class PhotoEditor implements BrushViewChangeListener {
                 imgClose.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
                 imgFlip.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
                 imgResize.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
-                imgRotate.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
+//                imgRotate.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
                 frmBorder.setTag(!isBackgroundVisible);
             }
 
@@ -119,9 +120,10 @@ public class PhotoEditor implements BrushViewChangeListener {
         imgFlip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (imageView.getScaleX() == 1)
-                    imageView.setScaleX(-1);
-                else imageView.setScaleX(1);
+                if (imageViewAdd.getScaleX() == 1)
+                    imageViewAdd.setScaleX(-1);
+                else imageViewAdd.setScaleX(1);
+//                setAlpha(imageView, 0.2f);
 
             }
         });
@@ -131,7 +133,7 @@ public class PhotoEditor implements BrushViewChangeListener {
             View deleteView = imageRootView.findViewById(R.id.imgPhotoEditorClose);
             View flipView = imageRootView.findViewById(R.id.imgPhotoEditorFlip);
             View scaleView = imageRootView.findViewById(R.id.imgPhotoEditorResize);
-            View rotateView = imageRootView.findViewById(R.id.imgPhotoEditorRotate);
+//            View rotateView = imageRootView.findViewById(R.id.imgPhotoEditorRotate);
 
             @Override
             public boolean onTouch(View v, MotionEvent e) {
@@ -170,10 +172,10 @@ public class PhotoEditor implements BrushViewChangeListener {
                         scaleView.setScaleX(1 / newScale);
                         scaleView.setScaleY(1 / newScale);
                     }
-                    if (rotateView != null) {
-                        rotateView.setScaleX(1 / newScale);
-                        rotateView.setScaleY(1 / newScale);
-                    }
+//                    if (rotateView != null) {
+//                        rotateView.setScaleX(1 / newScale);
+//                        rotateView.setScaleY(1 / newScale);
+//                    }
                     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     layoutParams.setMargins((int) (15 * des / newScale), (int) (15 * des / newScale), (int) (15 * des / newScale), (int) (15 * des / newScale));
                     frmBorder.setLayoutParams(layoutParams);
@@ -188,35 +190,35 @@ public class PhotoEditor implements BrushViewChangeListener {
                 return true;
             }
         });
-        imgRotate.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                final float xc = imageRootView.getWidth() / 2;
-                final float yc = imageRootView.getHeight() / 2;
-                final float x = event.getX();
-                final float y = event.getY();
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN: {
-//                        imageRootView.clearAnimation();
-//                        double mCurrAngle = Math.toDegrees(Math.atan2(x - xc, yc - y));
-                        break;
-                    }
-                    case MotionEvent.ACTION_MOVE: {
-                        //mCurrAngle = Math.toDegrees(Math.atan2(x - xc, yc - y));
-                        mCurrAngle = Math.toDegrees(Math.atan(x-xc));
-                        mPrevAngle = Math.toDegrees(Math.atan(y-yc));
-                        //mPrevAngle = mCurrAngle;
-                        animate(imageRootView, mPrevAngle, mCurrAngle, 1500);
-                        break;
-                    }
-                    case MotionEvent.ACTION_UP: {
-                        mPrevAngle = mCurrAngle = 0;
-                        break;
-                    }
-                }
-                return true;
-            }
-        });
+//        imgRotate.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent event) {
+//                final float xc = imageRootView.getWidth() / 2;
+//                final float yc = imageRootView.getHeight() / 2;
+//                final float x = event.getX();
+//                final float y = event.getY();
+//                switch (event.getAction()) {
+//                    case MotionEvent.ACTION_DOWN: {
+////                        imageRootView.clearAnimation();
+////                        double mCurrAngle = Math.toDegrees(Math.atan2(x - xc, yc - y));
+//                        break;
+//                    }
+//                    case MotionEvent.ACTION_MOVE: {
+//                        //mCurrAngle = Math.toDegrees(Math.atan2(x - xc, yc - y));
+//                        mCurrAngle = Math.toDegrees(Math.atan(x-xc));
+//                        mPrevAngle = Math.toDegrees(Math.atan(y-yc));
+//                        //mPrevAngle = mCurrAngle;
+//                        animate(imageRootView, mPrevAngle, mCurrAngle, 1500);
+//                        break;
+//                    }
+//                    case MotionEvent.ACTION_UP: {
+//                        mPrevAngle = mCurrAngle = 0;
+//                        break;
+//                    }
+//                }
+//                return true;
+//            }
+//        });
     }
 
     private void animate(View view, double fromDegrees, double toDegrees, long durationMillis) {
@@ -262,7 +264,7 @@ public class PhotoEditor implements BrushViewChangeListener {
         final ImageView imgClose = textRootView.findViewById(R.id.imgPhotoEditorClose);
         final ImageView imgFlip = textRootView.findViewById(R.id.imgPhotoEditorFlip);
         final ImageView imgResize = textRootView.findViewById(R.id.imgPhotoEditorResize);
-        final ImageView imgRotate = textRootView.findViewById(R.id.imgPhotoEditorRotate);
+//        final ImageView imgRotate = textRootView.findViewById(R.id.imgPhotoEditorRotate);
         final FrameLayout frmBorder = textRootView.findViewById(R.id.frmBorder);
         des = textRootView.getContext().getResources().getDisplayMetrics().density;
         textInputTv.setText(text);
@@ -278,7 +280,7 @@ public class PhotoEditor implements BrushViewChangeListener {
                 imgClose.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
                 imgFlip.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
                 imgResize.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
-                imgRotate.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
+//                imgRotate.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
                 frmBorder.setTag(!isBackgroundVisible);
             }
 
@@ -309,7 +311,7 @@ public class PhotoEditor implements BrushViewChangeListener {
             View deleteView = textRootView.findViewById(R.id.imgPhotoEditorClose);
             View flipView = textRootView.findViewById(R.id.imgPhotoEditorFlip);
             View scaleView = textRootView.findViewById(R.id.imgPhotoEditorResize);
-            View rotateView = textRootView.findViewById(R.id.imgPhotoEditorRotate);
+//            View rotateView = textRootView.findViewById(R.id.imgPhotoEditorRotate);
 
             @Override
             public boolean onTouch(View v, MotionEvent e) {
@@ -348,10 +350,10 @@ public class PhotoEditor implements BrushViewChangeListener {
                         scaleView.setScaleX(1 / newScale);
                         scaleView.setScaleY(1 / newScale);
                     }
-                    if (rotateView != null) {
-                        rotateView.setScaleX(1 / newScale);
-                        rotateView.setScaleY(1 / newScale);
-                    }
+//                    if (rotateView != null) {
+//                        rotateView.setScaleX(1 / newScale);
+//                        rotateView.setScaleY(1 / newScale);
+//                    }
                     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     layoutParams.setMargins((int) (15 * des / newScale), (int) (15 * des / newScale), (int) (15 * des / newScale), (int) (15 * des / newScale));
                     frmBorder.setLayoutParams(layoutParams);
@@ -367,21 +369,20 @@ public class PhotoEditor implements BrushViewChangeListener {
             }
 
         });
-        imgRotate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isRotate == false) {
-                    textInputTv.setRotation(180);
-                    isRotate = true;
-                } else {
-                    textInputTv.setRotation(0);
-                    isRotate = false;
-                }
-
-            }
-        });
+//        imgRotate.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (isRotate == false) {
+//                    textInputTv.setRotation(180);
+//                    isRotate = true;
+//                } else {
+//                    textInputTv.setRotation(0);
+//                    isRotate = false;
+//                }
+//
+//            }
+//        });
     }
-
     /**
      * This will update text and color on provided view
      *
@@ -455,7 +456,7 @@ public class PhotoEditor implements BrushViewChangeListener {
         final ImageView imgClose = emojiRootView.findViewById(R.id.imgPhotoEditorClose);
         final ImageView imgFlip = emojiRootView.findViewById(R.id.imgPhotoEditorFlip);
         final ImageView imgResize = emojiRootView.findViewById(R.id.imgPhotoEditorResize);
-        final ImageView imgRotate = emojiRootView.findViewById(R.id.imgPhotoEditorRotate);
+//        final ImageView imgRotate = emojiRootView.findViewById(R.id.imgPhotoEditorRotate);
         des = emojiRootView.getContext().getResources().getDisplayMetrics().density;
         if (emojiTypeface != null) {
             emojiTextView.setTypeface(emojiTypeface);
@@ -471,7 +472,7 @@ public class PhotoEditor implements BrushViewChangeListener {
                 imgClose.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
                 imgFlip.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
                 imgResize.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
-                imgRotate.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
+//                imgRotate.setVisibility(isBackgroundVisible ? View.GONE : View.VISIBLE);
                 frmBorder.setTag(!isBackgroundVisible);
             }
 
@@ -485,7 +486,7 @@ public class PhotoEditor implements BrushViewChangeListener {
             View deleteView = emojiRootView.findViewById(R.id.imgPhotoEditorClose);
             View flipView = emojiRootView.findViewById(R.id.imgPhotoEditorFlip);
             View scaleView = emojiRootView.findViewById(R.id.imgPhotoEditorResize);
-            View rotateView = emojiRootView.findViewById(R.id.imgPhotoEditorRotate);
+//            View rotateView = emojiRootView.findViewById(R.id.imgPhotoEditorRotate);
 
             @Override
             public boolean onTouch(View v, MotionEvent e) {
@@ -524,10 +525,10 @@ public class PhotoEditor implements BrushViewChangeListener {
                         scaleView.setScaleX(1 / newScale);
                         scaleView.setScaleY(1 / newScale);
                     }
-                    if (rotateView != null) {
-                        rotateView.setScaleX(1 / newScale);
-                        rotateView.setScaleY(1 / newScale);
-                    }
+//                    if (rotateView != null) {
+//                        rotateView.setScaleX(1 / newScale);
+//                        rotateView.setScaleY(1 / newScale);
+//                    }
                     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     layoutParams.setMargins((int) (15 * des / newScale), (int) (15 * des / newScale), (int) (15 * des / newScale), (int) (15 * des / newScale));
                     frmBorder.setLayoutParams(layoutParams);
@@ -542,19 +543,19 @@ public class PhotoEditor implements BrushViewChangeListener {
                 return true;
             }
         });
-        imgRotate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isRotate == false) {
-                    emojiTextView.setRotation(180);
-                    isRotate = true;
-                } else {
-                    emojiTextView.setRotation(0);
-                    isRotate = false;
-                }
-
-            }
-        });
+//        imgRotate.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (isRotate == false) {
+//                    emojiTextView.setRotation(180);
+//                    isRotate = true;
+//                } else {
+//                    emojiTextView.setRotation(0);
+//                    isRotate = false;
+//                }
+//
+//            }
+//        });
         imgFlip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -846,7 +847,10 @@ public class PhotoEditor implements BrushViewChangeListener {
         }
         return addedViews.size() != 0;
     }
-
+    public void setAlpha(float alpha)
+    {
+        imageViewAdd.setAlpha(alpha);
+    }
     /**
      * Redo the last operation perform on the {@link PhotoEditor}
      *
@@ -903,8 +907,12 @@ public class PhotoEditor implements BrushViewChangeListener {
                 frmBorder.setBackgroundResource(0);
             }
             ImageView imgClose = childAt.findViewById(R.id.imgPhotoEditorClose);
+            ImageView imgFlip = childAt.findViewById(R.id.imgPhotoEditorFlip);
+            ImageView imgResize = childAt.findViewById(R.id.imgPhotoEditorResize);
             if (imgClose != null) {
                 imgClose.setVisibility(View.GONE);
+                imgFlip.setVisibility(View.GONE);
+                imgResize.setVisibility(View.GONE);
             }
         }
     }

@@ -6,9 +6,10 @@
     android:layout_height="50dp">
 
     <TextView
+        android:gravity="center"
         android:id="@+id/font_picker_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:text="Font"
         android:layout_centerInParent="true"
         android:textColor="@color/black"

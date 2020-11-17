@@ -60,6 +60,7 @@ public class PhotoEditorView extends RelativeLayout {
         //Setup image attributes
         mImgSource = new FilterImageView(getContext());
         mImgSource.setId(imgSrcId);
+        mImgSource.setScaleType(ImageView.ScaleType.FIT_XY);
         mImgSource.setAdjustViewBounds(true);
         RelativeLayout.LayoutParams imgSrcParam = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

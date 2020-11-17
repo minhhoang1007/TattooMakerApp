@@ -3,22 +3,22 @@ package com.burhanrashid52.photoeditor.ui.detail;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-
+import android.view.Window;
+import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.burhanrashid52.photoeditor.BuildConfig;
 import com.burhanrashid52.photoeditor.R;
 import com.burhanrashid52.photoeditor.common.Common;
-
 import java.io.File;
 import java.io.FileOutputStream;
-
+import com.bumptech.glide.Glide;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -34,17 +34,28 @@ public class DetailIdeaActivity extends AppCompatActivity {
     @BindView(R.id.btnShareIdea)
     ImageView btnShareIdea;
     int intValue;
+    String fileStr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_detail_idea);
         ButterKnife.bind(this);
         initView();
     }
     private void initView(){
+        btnSaveIdea.setColorFilter(Color.WHITE);
+        btnShareIdea.setColorFilter(Color.WHITE);
         Intent intent = getIntent();
-        intValue = intent.getIntExtra("stt", 0);
-        imgDetailIdea.setImageResource(intValue);
+        //intValue = intent.getIntExtra("stt", 0);
+        fileStr = intent.getStringExtra("fileStr");
+        Glide.with(this)
+                .asBitmap()
+                .load("file:///android_asset/" + fileStr) // or URI/path
+                .into(imgDetailIdea);
+        //imgDetailIdea.setImageResource(intValue);
     }
     private void saveImage(){
         //String root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+ "/Camera/Your_Directory_Name";

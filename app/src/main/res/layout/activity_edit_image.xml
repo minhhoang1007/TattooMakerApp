@@ -61,13 +61,23 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:photo_src="@drawable/got_s"/>
-
-
+    <SeekBar
+        android:id="@+id/opacitySeekbar"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="10"
+        app:layout_constraintBottom_toBottomOf="@+id/photoEditorView"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="30dp"
+        android:progress="5"
+        android:layout_centerHorizontal="true" />
     <ImageView
         android:id="@+id/imgUndo"
         android:layout_width="@dimen/top_tool_icon_width"
         android:layout_height="wrap_content"
         android:padding="8dp"
+        android:visibility="gone"
         android:src="@drawable/ic_undo"
         app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
         app:layout_constraintEnd_toStartOf="@+id/imgRedo" />
@@ -77,6 +87,7 @@
         android:layout_width="@dimen/top_tool_icon_width"
         android:layout_height="wrap_content"
         android:padding="8dp"
+        android:visibility="gone"
         android:src="@drawable/ic_redo"
         app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -130,5 +141,4 @@
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/rvConstraintTools"
         tools:listitem="@layout/row_filter_view" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

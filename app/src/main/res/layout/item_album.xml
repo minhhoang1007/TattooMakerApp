@@ -8,7 +8,7 @@
     android:layout_height="180dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <ImageView
-        android:src="@drawable/gallery"
+        android:src="@drawable/got"
         android:id="@+id/imgAlbum"
         android:scaleType="fitXY"
         android:layout_width="match_parent"

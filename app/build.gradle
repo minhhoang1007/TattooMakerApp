@@ -11,6 +11,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         minSdkVersion 17
         targetSdkVersion 29
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -20,6 +21,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    lintOptions {
+        checkReleaseBuilds false
     }
 }
 
@@ -31,6 +35,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation project(':photoeditor')
     implementation 'androidx.cardview:cardview:1.0.0'
+    implementation project(path: ':ratedialog')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
@@ -48,6 +53,10 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation("com.squareup.okhttp3:okhttp:4.4.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.4.0")
+    //ads
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'com.google.firebase:firebase-ads:18.3.0'
+    implementation 'com.flurry.android:analytics:12.2.0@aar'
 }
 
 // make sure this line comes *after* you apply the Android plugin

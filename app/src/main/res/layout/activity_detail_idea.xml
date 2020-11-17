@@ -4,30 +4,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/revIdea"
     android:orientation="vertical"
     tools:context=".ui.detail.DetailIdeaActivity">
-    <RelativeLayout
-        android:background="@color/blue_light"
-        android:layout_width="match_parent"
-        android:layout_height="60dp">
-        <ImageView
-            android:id="@+id/btnBackItemIdea"
-            android:layout_centerInParent="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/ic_back_ios"
-            android:padding="10dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
-        <TextView
-            android:text="Detail idea"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </RelativeLayout>
+    <ImageView
+                android:id="@+id/btnBackItemIdea"
+                android:layout_centerInParent="true"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_back_ios"
+                android:padding="10dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"/>
+<!--    <RelativeLayout-->
+<!--        android:background="@color/white"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="60dp">-->
+<!--        <ImageView-->
+<!--            android:id="@+id/btnBackItemIdea"-->
+<!--            android:layout_centerInParent="true"-->
+<!--            android:layout_alignParentLeft="true"-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:src="@drawable/ic_arrow_back"-->
+<!--            android:padding="10dp"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"/>-->
+<!--        <TextView-->
+<!--            android:text="Detail idea"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@color/red_color_picker"-->
+<!--            android:textSize="22sp"-->
+<!--            android:layout_centerInParent="true"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+<!--    </RelativeLayout>-->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -35,7 +45,9 @@
         <ImageView
             android:layout_weight="1"
             android:id="@+id/imgDetailIdea"
-            android:src="@drawable/gallery"
+            android:layout_margin="20dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/got"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <LinearLayout

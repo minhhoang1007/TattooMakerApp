@@ -64,9 +64,9 @@ class MultiTouchListener implements OnTouchListener {
         this.photoEditImageView = photoEditImageView;
         this.mOnPhotoEditorListener = onPhotoEditorListener;
         this.deleteView = rootView.findViewById(R.id.imgPhotoEditorClose);
-            this.flipView = rootView.findViewById(R.id.imgPhotoEditorFlip);
+        this.flipView = rootView.findViewById(R.id.imgPhotoEditorFlip);
         this.scaleView = rootView.findViewById(R.id.imgPhotoEditorResize);
-        this.rotateView =rootView.findViewById(R.id.imgPhotoEditorRotate);
+//      this.rotateView =rootView.findViewById(R.id.imgPhotoEditorRotate);
         this.frmBorder = rootView.findViewById(R.id.frmBorder);
         setScaleByResizeImage(scaleView);
         if (deleteView != null) {

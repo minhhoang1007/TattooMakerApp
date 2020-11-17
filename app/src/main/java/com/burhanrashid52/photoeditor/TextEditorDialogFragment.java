@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,6 +86,8 @@ public class TextEditorDialogFragment extends DialogFragment {
         mInputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         mAddTextDoneTextView = view.findViewById(R.id.add_text_done_tv);
         mFontTextTextView = view.findViewById(R.id.font_text_done_tv);
+        mAddTextEditText.setFocusableInTouchMode(true);
+        mAddTextEditText.requestFocus();
         //Setup the font picker for text color
         RecyclerView addTextFontPickerRecyclerView = view.findViewById(R.id.add_text_font_picker_recycler_view);
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -95,6 +98,7 @@ public class TextEditorDialogFragment extends DialogFragment {
         fontPickerAdapter.setOnFontPickerClickListener(new FontPickerAdapter.OnFontPickerClickListener() {
             @Override
             public void onFontPickerClickListener(String fontCode) {
+                Log.e(TAG, "onFontPickerClickListener: 123456");
                 mFontCode = fontCode;
                 Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), fontCode);
                 mAddTextEditText.setTypeface(tf);

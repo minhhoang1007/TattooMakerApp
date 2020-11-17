@@ -7,13 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.burhanrashid52.photoeditor.R;
-
 import java.util.ArrayList;
 
 public class SampleAdapter extends RecyclerView.Adapter {

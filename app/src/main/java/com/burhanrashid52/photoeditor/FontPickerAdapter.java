@@ -25,7 +25,7 @@ public class FontPickerAdapter extends RecyclerView.Adapter<FontPickerAdapter.Vi
     private LayoutInflater inflater;
     private List<String> fontPickerFonts;
     private OnFontPickerClickListener onFontPickerClickListener;
-
+    int index;
     FontPickerAdapter(@NonNull Context context, @NonNull List<String> fontPickerFonts) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
@@ -56,8 +56,25 @@ public class FontPickerAdapter extends RecyclerView.Adapter<FontPickerAdapter.Vi
             @Override
             public void onClick(View view) {
                 onFontPickerClickListener.onFontPickerClickListener(fontPickerFonts.get(position));
+//                holder.fontPickerView.setBackgroundColor(holder.itemView.getResources().getColor(R.color.red_color_picker));
+//                notifyItemChanged(position);
+                index=position;
+                notifyDataSetChanged();
             }
         });
+//        holder.fontPickerView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                holder.fontPickerView.requestFocus();
+//            }
+//        });
+        if(index==position){
+            holder.fontPickerView.setBackgroundColor(Color.parseColor("#FF0000"));
+        }
+        else
+        {
+            holder.fontPickerView.setBackgroundColor(Color.parseColor("#ffffff"));
+        }
     }
 
     @Override

@@ -6,20 +6,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnticipateOvershootInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
-import android.util.Base64;
-import android.graphics.BitmapFactory;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -32,8 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.ChangeBounds;
 import androidx.transition.TransitionManager;
-import java.io.InputStream;
-import android.content.Context;
+
 import com.bumptech.glide.Glide;
 import com.burhanrashid52.photoeditor.base.BaseActivity;
 import com.burhanrashid52.photoeditor.common.Common;
@@ -41,9 +38,14 @@ import com.burhanrashid52.photoeditor.filters.FilterListener;
 import com.burhanrashid52.photoeditor.filters.FilterViewAdapter;
 import com.burhanrashid52.photoeditor.tools.EditingToolsAdapter;
 import com.burhanrashid52.photoeditor.tools.ToolType;
+import com.burhanrashid52.photoeditor.ui.detail.ComppleteActivity;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
@@ -52,8 +54,6 @@ import ja.burhanrashid52.photoeditor.PhotoFilter;
 import ja.burhanrashid52.photoeditor.SaveSettings;
 import ja.burhanrashid52.photoeditor.TextStyleBuilder;
 import ja.burhanrashid52.photoeditor.ViewType;
-
-import static com.yalantis.ucrop.util.BitmapLoadUtils.calculateInSampleSize;
 
 public class EditImageActivity extends BaseActivity implements OnPhotoEditorListener,
         View.OnClickListener,
@@ -77,6 +77,8 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
     private FilterViewAdapter mFilterViewAdapter = new FilterViewAdapter(this);
     private ConstraintLayout mRootView;
     private ConstraintSet mConstraintSet = new ConstraintSet();
+    private SeekBar mSeebar;
+    private boolean isSeebar;
     private boolean mIsFilterVisible;
     int offset = 0, duration = 100;
     float scaleX = 1.0f, scaleY = 1.0f;
@@ -86,6 +88,7 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
     Uri mSaveImageUri;
     String fileTattoo;
     Bitmap btTattoo;
+    private InterstitialAd mInterstitialAd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +96,7 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         setContentView(R.layout.activity_edit_image);
 
         initViews();
-
+        initAds();
         handleIntentImage(mPhotoEditorView.getSource());
 
         mWonderFont = Typeface.createFromAsset(getAssets(), "beyond_wonderland.ttf");
@@ -136,9 +139,10 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
     private void handleIntentImage(ImageView source) {
         Intent intent = getIntent();
         String stringFrame = intent.getStringExtra("desgin");
+        Log.e(TAG, "handleIntentImage: " + stringFrame );
         Glide.with(this)
                 .asBitmap()
-                .load(stringFrame) // or URI/path
+                .load(stringFrame)
                 .into(source);
         fileTattoo = intent.getStringExtra("fileTattoo");
     }
@@ -170,13 +174,12 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         ImageView imgSave;
         ImageView imgClose;
         ImageView imgShare;
-
         mPhotoEditorView = findViewById(R.id.photoEditorView);
         mTxtCurrentTool = findViewById(R.id.txtCurrentTool);
         mRvTools = findViewById(R.id.rvConstraintTools);
         mRvFilters = findViewById(R.id.rvFilterView);
         mRootView = findViewById(R.id.rootView);
-
+        mSeebar = findViewById(R.id.opacitySeekbar);
         imgUndo = findViewById(R.id.imgUndo);
         imgUndo.setOnClickListener(this);
 
@@ -194,11 +197,19 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
 
         imgClose = findViewById(R.id.imgClose);
         imgClose.setOnClickListener(this);
+
 //        imgShare = findViewById(R.id.imgShare);
 //        imgShare.setOnClickListener(this);
 
     }
-
+    private void initAds(){
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(Common.inter_id_admob);
+    }
+    public static void setAlpha(View view, float alpha)
+    {
+       view.setAlpha(alpha);
+    }
     @Override
     public void onEditTextChangeListener(final View rootView, String text, int colorCode) {
         TextEditorDialogFragment textEditorDialogFragment =
@@ -258,7 +269,6 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
 //            case R.id.imgShare:
 //                shareImage();
 //                break;
-
             case R.id.imgCamera:
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
@@ -315,7 +325,7 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
     @SuppressLint("MissingPermission")
     private void saveImage() {
         if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            showLoading("Saving...");
+            showLoading("Saving...and Loading ads");
 //            File file = new File(Environment.getExternalStorageDirectory()
 //                    + File.separator + ""
 //                    + System.currentTimeMillis() + ".png");
@@ -333,10 +343,34 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
                 mPhotoEditor.saveAsFile(file.getAbsolutePath(), saveSettings, new PhotoEditor.OnSaveListener() {
                     @Override
                     public void onSuccess(@NonNull String imagePath) {
-                        hideLoading();
+                        //hideLoading();
                         showSnackbar("Image Saved Successfully");
                         mSaveImageUri = Uri.fromFile(new File(imagePath));
                         mPhotoEditorView.getSource().setImageURI(mSaveImageUri);
+                        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+                        mInterstitialAd.setAdListener(new AdListener() {
+                            @Override
+                            public void onAdLoaded() {
+                                hideLoading();
+                                mInterstitialAd.show();
+                            }
+
+                            @Override
+                            public void onAdFailedToLoad(int errorCode) {
+                                Intent intentIdea = new Intent(getApplicationContext(), ComppleteActivity.class);
+                                intentIdea.putExtra("saved", fname);
+                                intentIdea.putExtra("imageUri", mSaveImageUri.toString());
+                                startActivity(intentIdea);
+                            }
+
+                            @Override
+                            public void onAdClosed() {
+                                Intent intentIdea = new Intent(getApplicationContext(), ComppleteActivity.class);
+                                intentIdea.putExtra("saved", fname);
+                                intentIdea.putExtra("imageUri", mSaveImageUri.toString());
+                                startActivity(intentIdea);
+                            }
+                        });
                     }
 
                     @Override
@@ -404,7 +438,7 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
     @Override
     public void onStickerClick(Bitmap bitmap) {
         mPhotoEditor.addImage(bitmap);
-        mTxtCurrentTool.setText(R.string.label_sticker);
+        //mTxtCurrentTool.setText(R.string.label_sticker);
     }
 
     @Override
@@ -459,6 +493,7 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
                 break;
             case TEXT:
                 TextEditorDialogFragment textEditorDialogFragment = TextEditorDialogFragment.show(this);
+
                 textEditorDialogFragment.setOnTextEditorListener(new TextEditorDialogFragment.TextEditor() {
                     @Override
                     public void onDone(String inputText, int colorCode, String fontCode) {
@@ -480,7 +515,36 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
 ////                showFilter(true);
 ////                break;
             case EMOJI:
-                mEmojiBSFragment.show(getSupportFragmentManager(), mEmojiBSFragment.getTag());
+//                mEmojiBSFragment.show(getSupportFragmentManager(), mEmojiBSFragment.getTag());
+               //showFilter(true);
+               // mPhotoEditor.setAlpha();
+                if(isSeebar){
+                    Log.e(TAG, "onToolSelected: " + isSeebar );
+                    mSeebar.setVisibility(View.GONE);
+                    isSeebar = false;
+                }else{
+                    Log.e(TAG, "onToolSelected: " + isSeebar );
+                    mSeebar.setVisibility(View.VISIBLE);
+                    isSeebar = true;
+                }
+                Log.e(TAG, "onToolSelected: 123" );
+                mSeebar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
+                        float prog = (float) (((float) progresValue) * 0.1);
+                        Log.e(TAG, "onProgressChanged: " + progresValue );
+                        mPhotoEditor.setAlpha(prog);
+                    }
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                });
                 break;
             case STICKER:
                 mStickerBSFragment.show(getSupportFragmentManager(), mStickerBSFragment.getTag());

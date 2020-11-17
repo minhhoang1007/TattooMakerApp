@@ -1,19 +1,21 @@
 package com.burhanrashid52.photoeditor.ui.idea;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.burhanrashid52.photoeditor.R;
+import com.burhanrashid52.photoeditor.common.Common;
 import com.burhanrashid52.photoeditor.ui.detail.DetailIdeaActivity;
-
+import com.google.android.gms.ads.InterstitialAd;
 import java.util.ArrayList;
-
+import java.util.Random;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -26,6 +28,8 @@ public class IdeaActivity extends AppCompatActivity {
     RecyclerView revIdea;
     ArrayList<String> imgList;
     IdeaAdapter adapter;
+    ProgressDialog progressDialog;
+    private InterstitialAd mInterstitialAd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +37,11 @@ public class IdeaActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initData();
         initView();
+        initAds();
+    }
+    private void initAds(){
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(Common.inter_id_admob);
     }
     private void initData(){
         imgList =  new ArrayList<>();
@@ -107,6 +116,9 @@ public class IdeaActivity extends AppCompatActivity {
         imgList.add("tattoo_ideas_70.png");
     }
     private void initView(){
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading...");
         revIdea.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new GridLayoutManager(this, 2);
         adapter = new IdeaAdapter(imgList);
@@ -116,7 +128,7 @@ public class IdeaActivity extends AppCompatActivity {
             @Override
             public void onClickItem(int position) {
                 Intent intent = new Intent(getApplicationContext(), DetailIdeaActivity.class);
-                intent.putExtra("stt", imgList.get(position));
+                intent.putExtra("fileStr", imgList.get(position));
                 startActivity(intent);
             }
         });
@@ -124,5 +136,36 @@ public class IdeaActivity extends AppCompatActivity {
     @OnClick(R.id.btnBackIdea)
     public void onViewClicked() {
         onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        progressDialog.show();
+        Random rd = new Random();
+        int rands = rd.nextInt(10);
+        if(rands < Common.is_random) {
+            mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            mInterstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    progressDialog.dismiss();
+                    mInterstitialAd.show();
+                }
+
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    progressDialog.dismiss();
+                    IdeaActivity.super.onBackPressed();
+                }
+
+                @Override
+                public void onAdClosed() {
+                    IdeaActivity.super.onBackPressed();
+                }
+            });
+        }else{
+            progressDialog.dismiss();
+            IdeaActivity.super.onBackPressed();
+        }
     }
 }
