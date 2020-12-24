@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.burhanrashid52.photoeditor">
+    package="com.pinterest.tattoo.realistic.tatuajes">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".PhotoApp"
+        android:name="com.pinterest.tattoo.realistic.tatuajes.PhotoApp"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
@@ -18,25 +18,24 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.detail.ComppleteActivity"/>
-        <activity
-            android:name=".ui.loading.LoadingActivity"
-            android:noHistory="true">
+        <activity android:name="com.pinterest.tattoo.realistic.tatuajes.ui.loading.AdNativeCustom" android:theme="@style/OneADS.NoActionBar"/>
+        <activity android:name="com.pinterest.tattoo.realistic.tatuajes.ui.detail.ComppleteActivity"/>
+        <activity android:name="com.pinterest.tattoo.realistic.tatuajes.ui.loading.LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.unlock.UnlockTattooActivity" />
-        <activity android:name=".ui.detail.DetailAlbumActivity" />
-        <activity android:name=".ui.mydesign.AlbumActivity" />
-        <activity android:name=".ui.sample.SampleActivity" />
-        <activity android:name=".ui.detail.DetailIdeaActivity" />
-        <activity android:name=".ui.idea.IdeaActivity" />
-        <activity android:name=".ui.main.MainActivity" />
+        <activity android:name="com.pinterest.tattoo.realistic.tatuajes.ui.unlock.UnlockTattooActivity" />
+        <activity android:name="com.pinterest.tattoo.realistic.tatuajes.ui.detail.DetailAlbumActivity" />
+        <activity android:name="com.pinterest.tattoo.realistic.tatuajes.ui.mydesign.AlbumActivity" />
+        <activity android:name="com.pinterest.tattoo.realistic.tatuajes.ui.sample.SampleActivity" />
+        <activity android:name="com.pinterest.tattoo.realistic.tatuajes.ui.detail.DetailIdeaActivity" />
+        <activity android:name="com.pinterest.tattoo.realistic.tatuajes.ui.idea.IdeaActivity" />
+        <activity android:name="com.pinterest.tattoo.realistic.tatuajes.ui.main.MainActivity" />
         <activity
-            android:name=".EditImageActivity"
+            android:name="com.pinterest.tattoo.realistic.tatuajes.EditImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter

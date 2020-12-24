@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lineUnlock"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -27,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp">
         <TextView
+            android:visibility="gone"
             android:id="@+id/txtNameUnlock"
             android:text="Lunar New Year Pack"
             android:layout_centerInParent="true"
@@ -49,17 +51,15 @@
     <RelativeLayout
         android:layout_gravity="center"
         android:id="@+id/relUnlock"
+        android:layout_margin="10dp"
         android:background="@color/yellow_color_picker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TextView
-            android:padding="20dp"
-            android:text="UNLOCK NOW"
-            android:layout_centerInParent="true"
-            android:textColor="@color/white"
-           android:textStyle="bold"
-            android:textSize="22sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        android:layout_width="150dp"
+        android:layout_height="60dp">
+        <ImageView
+            android:id="@+id/imgButtonUnlock"
+            android:src="@drawable/christmas_button"
+            android:scaleType="fitXY"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </RelativeLayout>
 </LinearLayout>

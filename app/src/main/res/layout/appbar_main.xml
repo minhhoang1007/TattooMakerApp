@@ -9,24 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
-            android:text="New Year Pack"
+            android:text="Pack 1: Lunar New Year"
             android:textSize="18sp"
-            android:textColor="@color/yellow_color_picker"
-            android:layout_margin="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="150dp">
-            <androidx.recyclerview.widget.RecyclerView
-                tools:listitem="@layout/item_newyear"
-                android:id="@+id/revNewYear"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </RelativeLayout>
-        <TextView
-            android:text="Lunar New Year Pack"
-            android:textSize="18sp"
+            android:layout_gravity="center"
+            android:textStyle="italic"
             android:textColor="@color/red_color_picker"
             android:layout_margin="10dp"
             android:layout_width="wrap_content"
@@ -41,9 +27,30 @@
                 android:layout_height="match_parent"/>
         </RelativeLayout>
         <TextView
-            android:text="New Arrivals"
+            android:text="Pack 2: New Year"
             android:textSize="18sp"
-            android:textColor="@color/yellow_color_picker"
+            android:textStyle="italic"
+            android:layout_gravity="center"
+            android:textColor="@color/orange_color_picker"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+            <androidx.recyclerview.widget.RecyclerView
+                tools:listitem="@layout/item_newyear"
+                android:id="@+id/revNewYear"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </RelativeLayout>
+
+        <TextView
+            android:text="Pack 3: New Arrivals"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            android:layout_gravity="center"
+            android:textColor="@color/green_color_picker"
             android:layout_margin="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -57,7 +64,7 @@
                 android:layout_height="match_parent"/>
         </RelativeLayout>
         <TextView
-            android:text="Tattoo Ideas"
+            android:text="Suggestions: Tattoo Ideas"
             android:textSize="18sp"
             android:textColor="@color/black"
             android:layout_margin="10dp"

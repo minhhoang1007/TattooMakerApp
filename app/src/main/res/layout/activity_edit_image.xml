@@ -28,8 +28,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:text="@string/app_name"
-            android:textSize="18sp"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/imgSave"
@@ -54,31 +54,33 @@
     <!--        android:orientation="horizontal">-->
     <!--    </LinearLayout>-->
 
-        <ja.burhanrashid52.photoeditor.PhotoEditorView
-            android:id="@+id/photoEditorView"
-            android:layout_marginTop="60dp"
-            android:layout_marginBottom="70dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:photo_src="@drawable/got_s"/>
+    <ja.burhanrashid52.photoeditor.PhotoEditorView
+        android:id="@+id/photoEditorView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="70dp"
+        app:photo_src="@drawable/got_s" />
+
     <SeekBar
         android:id="@+id/opacitySeekbar"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:max="10"
-        app:layout_constraintBottom_toBottomOf="@+id/photoEditorView"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="30dp"
+        android:max="10"
         android:progress="5"
-        android:layout_centerHorizontal="true" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/photoEditorView" />
+
     <ImageView
         android:id="@+id/imgUndo"
         android:layout_width="@dimen/top_tool_icon_width"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:visibility="gone"
         android:src="@drawable/ic_undo"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
         app:layout_constraintEnd_toStartOf="@+id/imgRedo" />
     <!--    android:background="@color/semi_black_transparent"-->
@@ -87,8 +89,8 @@
         android:layout_width="@dimen/top_tool_icon_width"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:visibility="gone"
         android:src="@drawable/ic_redo"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -118,11 +120,11 @@
         android:id="@+id/rvConstraintTools"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:background="@color/tool_bg"
         android:orientation="horizontal"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
-        android:layout_gravity="center"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

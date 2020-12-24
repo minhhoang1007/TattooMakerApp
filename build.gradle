@@ -7,7 +7,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath 'com.android.tools.build:gradle:4.0.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         classpath "com.github.dcendents:android-maven-gradle-plugin:2.0"
        // classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
@@ -22,6 +22,13 @@ allprojects {
         google()
         jcenter()
         maven {url "https://jitpack.io"}
+        maven {
+            url "http://167.71.205.74:8081/artifactory/libs-release-local"
+            credentials {
+                username = "nmtien92"
+                password = "AP2C2BNch86Hzu8S2gYdeaNNQjS"
+            }
+        }
     }
 }
 

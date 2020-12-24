@@ -10,7 +10,7 @@
         <item
             android:id="@+id/share"
             android:icon="@drawable/ic_share"
-            android:title="Share app" />
+            android:title="Share App" />
         <item
             android:id="@+id/rate"
             android:icon="@drawable/ic_star"

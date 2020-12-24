@@ -7,7 +7,8 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     defaultConfig {
-        applicationId "com.burhanrashid52.photoeditor"
+        applicationId "com.pinterest.tattoo.realistic.tatuajes"
+        //applicationId "com.oneadx.libadsinapp"
         vectorDrawables.useSupportLibrary = true
         minSdkVersion 17
         targetSdkVersion 29
@@ -35,7 +36,6 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation project(':photoeditor')
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation project(path: ':ratedialog')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
@@ -55,8 +55,15 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:4.4.0")
     //ads
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'com.google.firebase:firebase-ads:18.3.0'
+    //implementation 'com.google.firebase:firebase-ads:18.3.0'
     implementation 'com.flurry.android:analytics:12.2.0@aar'
+    //lib
+    implementation 'com.google.android.gms:play-services-ads:19.6.0'
+    implementation 'com.facebook.android:audience-network-sdk:5.+'
+    implementation 'com.oneadx:network-sdk:1.0.3'
+    implementation 'com.oneadx:oneads-sdk:0.0.19'
+    //add rate
+    implementation 'com.oneadx:ratedialog:0.0.1'
 }
 
 // make sure this line comes *after* you apply the Android plugin

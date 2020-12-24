@@ -9,8 +9,8 @@
         android:layout_height="20dp"
         android:layout_alignLeft="@id/frmBorder"
         android:layout_alignTop="@id/frmBorder"
-        android:layout_marginTop="-10dp"
         android:layout_marginLeft="-10dp"
+        android:layout_marginTop="-10dp"
         android:elevation="1dp"
         android:src="@drawable/ic_remove" />
 
@@ -18,12 +18,11 @@
         android:id="@+id/imgPhotoEditorFlip"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_alignRight="@id/frmBorder"
         android:layout_alignTop="@id/frmBorder"
+        android:layout_alignRight="@id/frmBorder"
         android:layout_marginTop="-10dp"
         android:layout_marginRight="-10dp"
         android:elevation="1dp"
-
         android:src="@drawable/ic_flip" />
 
     <ImageView
@@ -32,26 +31,26 @@
         android:layout_height="20dp"
         android:layout_alignRight="@id/frmBorder"
         android:layout_alignBottom="@id/frmBorder"
-        android:layout_marginBottom="-10dp"
         android:layout_marginRight="-10dp"
+        android:layout_marginBottom="-10dp"
         android:elevation="1dp"
         android:src="@drawable/ic_scale" />
-<!--    <ImageView-->
-<!--        android:id="@+id/imgPhotoEditorRotate"-->
-<!--        android:layout_width="20dp"-->
-<!--        android:layout_height="20dp"-->
-<!--        android:layout_alignLeft="@id/frmBorder"-->
-<!--        android:layout_alignBottom="@id/frmBorder"-->
-<!--        android:layout_marginBottom="-10dp"-->
-<!--        android:layout_marginLeft="-10dp"-->
-<!--        android:elevation="1dp"-->
-<!--        android:src="@drawable/ic_rotate" />-->
+    <!--    <ImageView-->
+    <!--        android:id="@+id/imgPhotoEditorRotate"-->
+    <!--        android:layout_width="20dp"-->
+    <!--        android:layout_height="20dp"-->
+    <!--        android:layout_alignLeft="@id/frmBorder"-->
+    <!--        android:layout_alignBottom="@id/frmBorder"-->
+    <!--        android:layout_marginBottom="-10dp"-->
+    <!--        android:layout_marginLeft="-10dp"-->
+    <!--        android:elevation="1dp"-->
+    <!--        android:src="@drawable/ic_rotate" />-->
 
     <FrameLayout
         android:id="@+id/frmBorder"
-        android:layout_margin="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="15dp"
 
         android:background="@drawable/rounded_border_tv">
 

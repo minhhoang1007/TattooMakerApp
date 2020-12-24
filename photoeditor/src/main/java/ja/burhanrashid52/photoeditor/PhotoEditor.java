@@ -86,6 +86,7 @@ public class PhotoEditor implements BrushViewChangeListener {
         addedViews = new ArrayList<>();
         redoViews = new ArrayList<>();
     }
+
     public void addImage(Bitmap desiredImage) {
         final View imageRootView = getLayout(ViewType.IMAGE);
 //        final ImageView imageView = imageRootView.findViewById(R.id.imgPhotoEditorImage);
@@ -383,6 +384,7 @@ public class PhotoEditor implements BrushViewChangeListener {
 //            }
 //        });
     }
+
     /**
      * This will update text and color on provided view
      *
@@ -691,6 +693,15 @@ public class PhotoEditor implements BrushViewChangeListener {
                     }
                 });
             }
+            final ImageView imageViewResize = rootView.findViewById(R.id.imgPhotoEditorResize);
+            if (imageViewResize != null) {
+                imageViewResize.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
+            }
         }
         return rootView;
     }
@@ -847,10 +858,11 @@ public class PhotoEditor implements BrushViewChangeListener {
         }
         return addedViews.size() != 0;
     }
-    public void setAlpha(float alpha)
-    {
+
+    public void setAlpha(float alpha) {
         imageViewAdd.setAlpha(alpha);
     }
+
     /**
      * Redo the last operation perform on the {@link PhotoEditor}
      *
@@ -909,7 +921,7 @@ public class PhotoEditor implements BrushViewChangeListener {
             ImageView imgClose = childAt.findViewById(R.id.imgPhotoEditorClose);
             ImageView imgFlip = childAt.findViewById(R.id.imgPhotoEditorFlip);
             ImageView imgResize = childAt.findViewById(R.id.imgPhotoEditorResize);
-            if (imgClose != null) {
+            if (imgClose != null & imgFlip != null & imgResize != null) {
                 imgClose.setVisibility(View.GONE);
                 imgFlip.setVisibility(View.GONE);
                 imgResize.setVisibility(View.GONE);
