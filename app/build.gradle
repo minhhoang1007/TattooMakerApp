@@ -7,8 +7,8 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     defaultConfig {
-        applicationId "com.pinterest.tattoo.realistic.tatuajes"
-        //applicationId "com.oneadx.libadsinapp"
+//      applicationId "com.pinterest.tattoo.realistic.tatuajes"
+        applicationId "com.oneadx.libadsinapp"
         vectorDrawables.useSupportLibrary = true
         minSdkVersion 17
         targetSdkVersion 29
@@ -60,8 +60,10 @@ dependencies {
     //lib
     implementation 'com.google.android.gms:play-services-ads:19.6.0'
     implementation 'com.facebook.android:audience-network-sdk:5.+'
-    implementation 'com.oneadx:network-sdk:1.0.3'
-    implementation 'com.oneadx:oneads-sdk:0.0.19'
+
+    implementation 'com.facebook:oneadx-audience-network-sdk:5.3.3' // lib ngoai
+    implementation 'com.oneadx:oneads-sdk:0.0.46' // lib trong
+    implementation 'com.yolo:audience-network-sdk:1.0.1' // mang quang cao
     //add rate
     implementation 'com.oneadx:ratedialog:0.0.1'
 }

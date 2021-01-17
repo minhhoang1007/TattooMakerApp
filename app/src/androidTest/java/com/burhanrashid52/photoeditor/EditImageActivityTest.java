@@ -8,7 +8,7 @@ import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
-import com.pinterest.tattoo.realistic.tatuajes.EditImageActivity;
+import com.pinterest.tattoo.realistic.tatuajes2.EditImageActivity;
 
 import org.junit.Ignore;
 import org.junit.Rule;
